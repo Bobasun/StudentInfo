@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: StudentInfo
+Bundle-SymbolicName: StudentInfo;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.apache.felix.scr,
+ org.eclipse.equinox.util,
+ org.eclipse.equinox.event,
+ org.eclipse.jface
+Automatic-Module-Name: StudentInfo
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
