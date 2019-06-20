@@ -22,11 +22,26 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.eclipsercp.studentinfo.UsersView"
+            class="org.eclipsercp.studentinfo.view.UsersView"
             id="org.eclipsercp.studentinfo.treeviewer"
             name="UsersView"
             restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipsercp.studentinfo.editor.ItemEditor"
+            default="true"
+            id="StudentInfo.editor"
+            name="Item Editor">
+      </editor>
+      <editor
+            class="org.eclipsercp.studentinfo.editor.GroupEditor"
+            default="false"
+            id="StudentInfo.groupEditor"
+            name="Group Editor">
+      </editor>
    </extension>
 
 </plugin>
