@@ -85,17 +85,17 @@ public class UsersView extends ViewPart implements ChangeListener {
 
 		INodeService service = NodeService.getInstance();
 
-//		INode group = new GroupNode("group 1");
-//		INode group2 = new GroupNode("group 1.2");
-//				
-//		INode item1 = new ItemNode("item1", "", "dsa", 1);
-//		INode item2 = new ItemNode("item2", "", "dsa", 1);
-//		service.addNode(service.getRoot(), group);
-//		service.addNode(group, group2);
-//	
-//		service.addNode(group2, item1);
-//		service.addNode(service.getRoot(), item2);
-//		
+		INode group = new GroupNode("group 1");
+		INode group2 = new GroupNode("group 1.2");
+				
+		INode item1 = new ItemNode("item1", "", "dsa", 1);
+		INode item2 = new ItemNode("item2", "", "dsa", 1);
+		service.addNode(service.getRoot(), group);
+		service.addNode(group, group2);
+	
+		service.addNode(group2, item1);
+		service.addNode(service.getRoot(), item2);
+		
 //		
 //		
 //		System.err.println(service.getRoot().getChildren());

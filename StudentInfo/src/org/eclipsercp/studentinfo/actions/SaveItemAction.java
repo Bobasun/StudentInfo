@@ -29,6 +29,7 @@ public class SaveItemAction extends Action implements IWorkbenchAction {
 //		if (page.getActiveEditor() != null) {
 		if(page.getActiveEditor() instanceof ItemEditor) {
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
+			System.err.println(editor);
 			editor.setContent();
 			
 		if(editor.isDirty()) {

@@ -14,5 +14,9 @@ public class RootNode extends Node {
 	public INode getParent() {
 		return null;
 	}
-
+	
+//	@Override
+//	public String getPath() {
+//		return ".";
+//	}
 }

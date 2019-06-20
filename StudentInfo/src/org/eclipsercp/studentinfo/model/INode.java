@@ -12,6 +12,7 @@ public interface INode {
 	String toString();
 	void setParent(INode parent);
 	INode getRoot();
+	String getPath();
 	
 	
 }

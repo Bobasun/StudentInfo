@@ -3,12 +3,12 @@ package org.eclipsercp.studentinfo.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Node implements INode{
+public abstract class Node implements INode {
 
 	protected List<INode> nodes;
 	protected INode parent;
 	protected String name;
-	
+
 	public Node(String name) {
 		this.name = name;
 	}
@@ -30,28 +30,43 @@ public abstract class Node implements INode{
 
 	@Override
 	public boolean hasChildren() {
-		if(nodes == null) {
+		if (nodes == null) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void setParent(INode parent) {
 		this.parent = parent;
-		
+
 	}
 
 	public INode getRoot() {
-		if(parent == null) {
+		if (parent == null) {
 			return this;
 		}
 		return parent.getRoot();
 	}
-	
+
 	public String toString() {
 		return name;
 	}
-	
-	
+
+	@Override
+	public String getPath() {
+		if (parent != null) {
+			return parent.getPath() + "/" + getName();
+		} else {
+			return "/" + getName();
+		}
+//		if (parent == null) {
+//			path += this.getName();
+//			return path;
+//		} else {
+//			path+=this.getName() +"/";
+//		return parent.getPathToRoot(path);
+//		}
+	}
+
 }

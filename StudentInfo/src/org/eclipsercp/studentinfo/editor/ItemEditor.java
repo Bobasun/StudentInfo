@@ -25,6 +25,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
@@ -46,6 +47,7 @@ public class ItemEditor extends AbstractEditorPart {
 	private Text textAddress;
 	private Text textCity;
 	private Text textResult;
+	private Text hidenText;
 
 //	private INode parent;
 //	private ItemNode localItem;
@@ -132,6 +134,8 @@ public class ItemEditor extends AbstractEditorPart {
 		textResult = new Text(composite, SWT.BORDER);
 		textResult.setData(data);
 
+		hidenText = new Text(parent, SWT.NONE);
+		hidenText.setVisible(false);
 //		Composite compositeImage = new Composite(sashForm,SWT.NONE);
 	}
 
@@ -190,12 +194,12 @@ public class ItemEditor extends AbstractEditorPart {
 	}
 
 	public void setContent() {
-		ItemNode node = new ItemNode();
-		node.setAddress(getTextAddress().getText());
-		node.setName(getTextName().getText());
-		node.setCity(getTextCity().getText());
-//		node.setResult(Integer.parseInt(getTextAddress().getText()));
-		node.setResult(0);
+//		int fieldResult = Integer.parseInt(getTextAddress().getText());
+		ItemNode node = new ItemNode(getTextName().getText(),getTextAddress().getText(),
+				getTextCity().getText(),0);
+		
+		Controller.getInstance().save(node, hidenText.getText());
+//		
 //		INodeService service = NodeService.getInstance();
 //		if (localItem != null) {
 //			service.updateNode(localItem, node);
@@ -206,6 +210,14 @@ public class ItemEditor extends AbstractEditorPart {
 
 	}
 //	}
+
+	public Text getHidenText() {
+		return hidenText;
+	}
+
+	public void setHidenText(Text hidenText) {
+		this.hidenText = hidenText;
+	}
 
 //	public void setParent(INode parent) {
 ////		if (parent instanceof RootNode || parent instanceof GroupNode) {
@@ -228,4 +240,6 @@ public class ItemEditor extends AbstractEditorPart {
 //		list.remove(lis);
 //	}
 
+	
+	
 }

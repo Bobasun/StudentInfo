@@ -56,8 +56,8 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 				parent = NodeService.getInstance().getRoot();
 			} else {
 				parent = (INode) selection.getFirstElement();
-//				editor.setParent(parent);
 				editor.getTextGroup().setText(parent.getName());
+				editor.getHidenText().setText(parent.getPath());
 			}
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
