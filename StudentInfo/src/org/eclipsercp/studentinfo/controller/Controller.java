@@ -15,7 +15,7 @@ public class Controller {
 	private static Controller instance;
 	private INodeService service = NodeService.getInstance();
 	private List<ChangeListener> listListeners = new ArrayList<>();
-	
+
 	private Controller() {
 	}
 
@@ -25,23 +25,25 @@ public class Controller {
 		}
 		return instance;
 	}
-	
+
 	public void save(INode node, String parent) {
 		INode parentNode = service.find(parent);
-		node.setParent(parentNode);
-		
-		if (node.getRoot() == service.getRoot()) {
-			
-			
+		if (!parentNode.getChildren().contains(node)) {
+			service.addNode(parentNode, node);
+		} else {
+			service.updateNode(null, node);
+
 		}
-		
+//		if (node.getRoot() == service.getRoot()) {	
+//		}
+
 		notifyAllListeners(null);
 	}
-	
+
 	public void remove() {
 		notifyAllListeners(null);
 	}
-	
+
 	public void addListener(ChangeListener lis) {
 		listListeners.add(lis);
 	}
@@ -51,7 +53,7 @@ public class Controller {
 //		for (int i = 0; i < list.size(); i++)
 //			list.get(i).stateChanged(event);
 	}
-	
+
 	public void removeListener(ChangeListener lis) {
 		listListeners.remove(lis);
 	}

@@ -43,6 +43,7 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
 			editor.showItem(user);
+			editor.getHidenText().setText(user.getParent().getPath());
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
