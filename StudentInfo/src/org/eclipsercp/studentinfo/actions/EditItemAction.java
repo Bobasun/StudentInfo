@@ -35,16 +35,15 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 	}
 
 	public void run() {
-		Object item = selection.getFirstElement();
-		ItemNode user = (ItemNode) item;
+		ItemNode item = (ItemNode)selection.getFirstElement();
+		ItemNode user = ((ItemNode)item.clone());
 		IWorkbenchPage page = window.getActivePage();
 		ItemEditorInput input = new ItemEditorInput(user.getPath() + user.getName());
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-			editor.showItem(user);
-			editor.getHidenText().setText(user.getParent().getPath());
-			System.err.println(editor.getHidenText().getText());
+			editor.addSelectedNode(user);
+			editor.fillFields();
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

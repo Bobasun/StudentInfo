@@ -43,9 +43,12 @@ public class GroupEditor extends AbstractEditorPart {
 		textGroup.addModifyListener(new TextModifyListener());
 	}
 
+	
+	
 	public void setContent() {
 		GroupNode node = new GroupNode(textGroup.getText());
 		Controller.getInstance().save(node, hidenText.getText());
+		
 //		setDirty(false);
 	}
 

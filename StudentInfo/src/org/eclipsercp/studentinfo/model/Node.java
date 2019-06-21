@@ -3,7 +3,7 @@ package org.eclipsercp.studentinfo.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Node implements INode {
+public abstract class Node implements INode, Cloneable{
 
 	protected List<INode> nodes;
 	protected INode parent;
@@ -69,4 +69,15 @@ public abstract class Node implements INode {
 //		}
 	}
 
+	public INode clone() {
+		INode node = null;
+		try {
+			node =  (INode) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return node;
+	}
+	
 }

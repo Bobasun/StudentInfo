@@ -44,12 +44,14 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		}
 		
 		IWorkbenchPage page = window.getActivePage();
-		ItemEditorInput input = new ItemEditorInput("new");
+		ItemEditorInput input = new ItemEditorInput("");
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-			editor.getTextGroup().setText(parent.getName());
-			editor.getHidenText().setText(parent.getPath());
+//			editor.addSelectedNode(new Node(parent));
+//			
+//			editor.getTextGroup().setText(parent.getName());
+//			editor.getHidenText().setText(parent.getPath());
 			
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block

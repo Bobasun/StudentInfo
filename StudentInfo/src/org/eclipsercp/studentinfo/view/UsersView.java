@@ -53,13 +53,15 @@ public class UsersView extends ViewPart implements ChangeListener {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
 				if (thisSelection.getFirstElement() instanceof ItemNode) {
-					ItemNode selectedNode = (ItemNode) thisSelection.getFirstElement();
+					ItemNode selectedNode = (ItemNode) ((ItemNode) thisSelection.getFirstElement()).clone();
+					System.err.println(selectedNode.getAddress());
 					try {
 
 						getSite().getPage().openEditor(
 								new ItemEditorInput(selectedNode.getName()), ItemEditor.ID);
 						ItemEditor editor = (ItemEditor) getSite().getPage().getActiveEditor();
-						editor.showItem(selectedNode);
+						editor.addSelectedNode(selectedNode);
+						editor.fillFields();
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

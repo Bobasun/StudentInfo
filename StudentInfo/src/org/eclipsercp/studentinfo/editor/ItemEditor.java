@@ -50,7 +50,7 @@ public class ItemEditor extends AbstractEditorPart {
 	private Text textCity;
 	private Text textResult;
 	private Text hidenText;
-
+    private ItemNode selectedNode;
 	public ItemEditor() {
 	}
 	
@@ -140,6 +140,10 @@ public class ItemEditor extends AbstractEditorPart {
 //		Composite compositeImage = new Composite(sashForm,SWT.NONE);
 	}
 
+	public void addSelectedNode(ItemNode node) {
+		this.selectedNode = node;
+//		fillFields();
+	};
 	@Override
 	public void setFocus() {
 
@@ -185,12 +189,15 @@ public class ItemEditor extends AbstractEditorPart {
 		this.textResult = textResult;
 	}
 
-	public void showItem(ItemNode user) {
-		getTextName().setText(user.getName());
-		getTextAddress().setText(user.getAddress());
-		getTextGroup().setText(user.getGroup());
-		getTextCity().setText(user.getCity());
-		getTextResult().setText("" + user.getResult());
+	public void fillFields() {
+//		ItemNode node = () 
+		getTextName().setText(selectedNode.getName());
+		getTextAddress().setText(selectedNode.getAddress());
+		getTextGroup().setText(selectedNode.getGroup());
+		getTextCity().setText(selectedNode.getCity());
+		getTextResult().setText("" + selectedNode.getResult());
+		getHidenText().setText(selectedNode.getParent().getPath());
+
 	}
 
 	public void setContent() {
