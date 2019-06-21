@@ -1,7 +1,5 @@
 package org.eclipsercp.studentinfo.actions;
 
-
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,37 +36,30 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 
 	@Override
 	public void run() {
-
-//		Object item = selection.getFirstElement();
-//		INode node = (Node) item;
+		INode parent = null;
+		if (selection.getFirstElement() == null) {
+			parent = NodeService.getInstance().getRoot();
+		} else {
+			parent = (INode) selection.getFirstElement();
+		}
+		
 		IWorkbenchPage page = window.getActivePage();
-//		INode itemNode = new ItemNode("","","",0);
 		ItemEditorInput input = new ItemEditorInput("new");
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
+			editor.getTextGroup().setText(parent.getName());
+			editor.getHidenText().setText(parent.getPath());
 			
-			INode parent = null;
-//			INodeService service = new NodeService(node.getRoot());
-//			service.addNode(node, itemNode);
-			System.err.println(selection);
-			if (selection == null) {
-				parent = NodeService.getInstance().getRoot();
-			} else {
-				parent = (INode) selection.getFirstElement();
-				editor.getTextGroup().setText(parent.getName());
-				editor.getHidenText().setText(parent.getPath());
-			}
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
-		
+
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
 			setEnabled(!(selection.getFirstElement() instanceof ItemNode));

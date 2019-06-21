@@ -68,6 +68,8 @@ public class ItemEditorInput implements IEditorInput {
 		return true;
 	}
 
-	
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }

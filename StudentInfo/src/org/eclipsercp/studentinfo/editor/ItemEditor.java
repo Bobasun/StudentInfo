@@ -1,5 +1,6 @@
 package org.eclipsercp.studentinfo.editor;
 
+import java.awt.event.TextEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.swing.event.ChangeListener;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -49,20 +51,15 @@ public class ItemEditor extends AbstractEditorPart {
 	private Text textResult;
 	private Text hidenText;
 
-//	private INode parent;
-//	private ItemNode localItem;
-
 	public ItemEditor() {
 	}
-
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 	}
 
 	@Override
 	public void doSaveAs() {
-//	Node node = new Node();
-//    NodeService.getInstance().add(node);
 	}
 
 	@Override
@@ -96,7 +93,8 @@ public class ItemEditor extends AbstractEditorPart {
 		data = new GridData(GridData.FILL, GridData.FILL, true, false);
 		textName = new Text(composite, SWT.BORDER);
 		textName.setData(data);
-
+		textName.addModifyListener(new TextModifyListener());
+		
 		data = new GridData(GridData.BEGINNING);
 		labelGroup = new Label(composite, SWT.NONE);
 		labelGroup.setText("Group");
@@ -115,6 +113,7 @@ public class ItemEditor extends AbstractEditorPart {
 		data = new GridData(GridData.END);
 		textAddress = new Text(composite, SWT.BORDER);
 		textAddress.setData(data);
+		textAddress.addModifyListener(new TextModifyListener());
 
 		data = new GridData(GridData.BEGINNING);
 		labelCity = new Label(composite, SWT.NONE);
@@ -124,6 +123,7 @@ public class ItemEditor extends AbstractEditorPart {
 		data = new GridData(GridData.END);
 		textCity = new Text(composite, SWT.BORDER);
 		textCity.setData(data);
+		textCity.addModifyListener(new TextModifyListener());
 
 		data = new GridData(GridData.BEGINNING);
 		labelResult = new Label(composite, SWT.NONE);
@@ -133,6 +133,7 @@ public class ItemEditor extends AbstractEditorPart {
 		data = new GridData(GridData.END);
 		textResult = new Text(composite, SWT.BORDER);
 		textResult.setData(data);
+		textResult.addModifyListener(new TextModifyListener());
 
 		hidenText = new Text(parent, SWT.NONE);
 		hidenText.setVisible(false);
@@ -190,7 +191,6 @@ public class ItemEditor extends AbstractEditorPart {
 		getTextGroup().setText(user.getGroup());
 		getTextCity().setText(user.getCity());
 		getTextResult().setText("" + user.getResult());
-//		this.localItem = user;
 	}
 
 	public void setContent() {
@@ -199,47 +199,20 @@ public class ItemEditor extends AbstractEditorPart {
 				getTextCity().getText(),0);
 		
 		Controller.getInstance().save(node, hidenText.getText());
-//		
-//		INodeService service = NodeService.getInstance();
-//		if (localItem != null) {
-//			service.updateNode(localItem, node);
-//			localItem = null;
-//		} else {
-//			service.addNode(parent, node);
-//			notifyAllListeners(null);
-
+		ItemEditorInput input = ((ItemEditorInput) getEditorInput());
+		input.setName(hidenText.getText() + getTextName().getText());
+		
+		setInput(input);
+//		setDirty(false);
 	}
-//	}
 
 	public Text getHidenText() {
 		return hidenText;
 	}
 
+	
+	
 	public void setHidenText(Text hidenText) {
 		this.hidenText = hidenText;
 	}
-
-//	public void setParent(INode parent) {
-////		if (parent instanceof RootNode || parent instanceof GroupNode) {
-//		this.parent = parent;
-//		}
-//		System.err.println(parent);
-//	}
-
-//	public void addListener(ChangeListener lis) {
-//		list.add(lis);
-//	}
-//
-//	private void notifyAllListeners(ChangeEvent event) {
-//		list.forEach(listener -> listener.stateChanged(event));
-////		for (int i = 0; i < list.size(); i++)
-////			list.get(i).stateChanged(event);
-//	}
-//	
-//	public void removeListener(ChangeListener lis) {
-//		list.remove(lis);
-//	}
-
-	
-	
 }

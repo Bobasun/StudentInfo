@@ -1,6 +1,8 @@
 package org.eclipsercp.studentinfo.editor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -60,6 +62,13 @@ public class AbstractEditorPart extends EditorPart {
 	public void setFocus() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	class TextModifyListener implements ModifyListener {
+		@Override
+		public void modifyText(ModifyEvent e) {
+			setDirty(true);
+		}
 	}
 
 }

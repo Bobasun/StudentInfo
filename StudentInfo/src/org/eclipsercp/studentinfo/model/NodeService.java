@@ -1,10 +1,6 @@
 package org.eclipsercp.studentinfo.model;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NodeService implements INodeService {
 

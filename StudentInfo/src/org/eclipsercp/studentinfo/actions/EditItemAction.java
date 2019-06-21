@@ -38,12 +38,13 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 		Object item = selection.getFirstElement();
 		ItemNode user = (ItemNode) item;
 		IWorkbenchPage page = window.getActivePage();
-		ItemEditorInput input = new ItemEditorInput(user.getName());
+		ItemEditorInput input = new ItemEditorInput(user.getPath() + user.getName());
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
 			editor.showItem(user);
 			editor.getHidenText().setText(user.getParent().getPath());
+			System.err.println(editor.getHidenText().getText());
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

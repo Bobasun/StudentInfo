@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.ViewPart;
@@ -45,24 +46,11 @@ public class UsersView extends ViewPart implements ChangeListener {
 		treeViewer.setContentProvider(new UsersTreeViewerContentProvider());
 		treeViewer.setInput(getRootNode());
 		getSite().setSelectionProvider(treeViewer);
-//		controller.addListener(this);
 		controller.addListener(this);
-		controller.addListener(this);
-		controller.addListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				System.err.println("Listener");
-			}
-		});
-//		sign
-
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
-				System.err.println("doubleClick");
-				TreeViewer viewer = (TreeViewer) event.getViewer();
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
 				if (thisSelection.getFirstElement() instanceof ItemNode) {
 					ItemNode selectedNode = (ItemNode) thisSelection.getFirstElement();
@@ -84,32 +72,20 @@ public class UsersView extends ViewPart implements ChangeListener {
 	private INode[] getRootNode() {
 
 		INodeService service = NodeService.getInstance();
-
 		INode group = new GroupNode("group 1");
-		INode group2 = new GroupNode("group 1.2");
-				
+		INode group2 = new GroupNode("group 1.2");		
 		INode item1 = new ItemNode("item1", "", "dsa", 1);
 		INode item2 = new ItemNode("item2", "", "dsa", 1);
 		service.addNode(service.getRoot(), group);
 		service.addNode(group, group2);
-	
 		service.addNode(group2, item1);
 		service.addNode(service.getRoot(), item2);
-		
-//		
-//		
-//		System.err.println(service.getRoot().getChildren());
-//		System.err.println(service.getRoot().getChildren().get(0).getChildren());
-//		System.err.println(service.getRoot().getChildren().get(0).getChildren().get(0).getChildren());
-//		
-
 		return service.getAllNodes();
 	}
 
 	@Override
 	public void setFocus() {
-// 		treeViewer.refresh();
-//		System.err.println("refreshed");
+
 	}
 
 	@Override

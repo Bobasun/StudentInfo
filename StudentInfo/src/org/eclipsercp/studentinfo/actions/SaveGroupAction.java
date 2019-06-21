@@ -37,9 +37,11 @@ public class SaveGroupAction extends Action implements ISelectionListener,IWorkb
 
 				editor.setContent();
 //				page.closeEditor(editor, false);
+				
 //			}
 //		}
 		}
+		
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class SaveGroupAction extends Action implements ISelectionListener,IWorkb
 //				setEnabled(editor.isDirty());
 //	}
 		
-		setEnabled(false);
+//		setEnabled(false);
 	}
 
 }

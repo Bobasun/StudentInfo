@@ -1,10 +1,14 @@
 package org.eclipsercp.studentinfo.editor;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.NodeService;
@@ -19,7 +23,7 @@ public class GroupEditor extends AbstractEditorPart {
 
 	private Text textGroup;
 	private Label labelGroup;
-	private INode parent;
+	private Text hidenText;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -34,18 +38,31 @@ public class GroupEditor extends AbstractEditorPart {
 		labelGroup.setText("Group");
 
 		textGroup = new Text(composite, SWT.NONE);
-
-	}
-
-	public void setParent(INode parent) {
-		this.parent = parent;
-//		System.err.println(parent);
+		hidenText = new Text(parent, SWT.NONE);
+		hidenText.setVisible(false);
+		textGroup.addModifyListener(new TextModifyListener());
 	}
 
 	public void setContent() {
 		GroupNode node = new GroupNode(textGroup.getText());
-		NodeService service = NodeService.getInstance();
-		service.addNode(parent, node);
+		Controller.getInstance().save(node, hidenText.getText());
+//		setDirty(false);
+	}
+
+	public Text getHidenText() {
+		return hidenText;
+	}
+
+	public Text getTextGroup() {
+		return textGroup;
+	}
+
+	public void setTextGroup(Text textGroup) {
+		this.textGroup = textGroup;
+	}
+
+	public void setHidenText(Text hidenText) {
+		this.hidenText = hidenText;
 	}
 
 }
