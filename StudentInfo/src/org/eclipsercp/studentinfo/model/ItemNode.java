@@ -1,7 +1,5 @@
 package org.eclipsercp.studentinfo.model;
 
-import java.util.List;
-
 public class ItemNode extends Node {
 
 	private String address;
@@ -10,7 +8,6 @@ public class ItemNode extends Node {
 
 	public ItemNode(String name, String address, String city, int result) {
 		super(name);
-		this.name = name;
 		this.address = address;
 		this.city = city;
 		this.result = result;
@@ -20,6 +17,11 @@ public class ItemNode extends Node {
 		super("");
 	}
 
+	public ItemNode(GroupNode parent) {
+		this("","","", 0);
+		this.parent = parent;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -57,13 +59,46 @@ public class ItemNode extends Node {
 	}
 
 	@Override
-	public List<INode> getChildren() {
-		return null;
-	}
-
-	@Override
 	public String toString() {
 		return name + " " + address;
 	}
 
+	@Override
+	public int hashCode() {
+		super.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + this.result;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		super.equals(obj);
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemNode other = (ItemNode) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (result != other.result)
+			return false;
+		return true;
+	}
+
+	
+	
 }

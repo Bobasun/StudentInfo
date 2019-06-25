@@ -4,7 +4,7 @@ import java.util.List;
 
 public class NodeService implements INodeService {
 
-	private INode root;
+	private GroupNode root;
 	private static NodeService nodeService;
 
 	public static NodeService getInstance() {
@@ -14,62 +14,55 @@ public class NodeService implements INodeService {
 		return nodeService;
 	}
 
-	private NodeService(INode root) {
+	private NodeService(GroupNode root) {
 		this.root = root;
 
 	}
 
 	@Override
-	public void removeNode(INode node) {
-		if (node.getParent().getChildren().contains(node)) {
-			node.getParent().getChildren().remove(node);
+	public void removeNode(GroupNode parent, INode node) {
+		if (parent.getChildren().contains(node)) {
+			parent.getChildren().remove(node);
 		}
 	}
 
 	@Override
-	public void addNode(INode parent, INode node) {
+	public void addNode(GroupNode parent, INode node) {
 		parent.getChildren().add(node);
 		node.setParent(parent);
 	}
 
 	@Override
 	public void updateNode(INode oldNode, INode newNode) {
-		if (oldNode.getParent().getChildren().contains(oldNode)) {
-			int index = oldNode.getParent().getChildren().indexOf(oldNode);
-			oldNode.getParent().getChildren().set(index, newNode);
-			newNode.setParent(oldNode.getParent());
+		newNode.setParent(oldNode.getParent());
+		if(oldNode.hasChildren()) {
+			((GroupNode)newNode).addChildren(((GroupNode)oldNode).getChildren());
+			for (int i = 0; i < ((GroupNode)newNode).getChildren().size(); i++) {
+				((GroupNode)newNode).getChildren().get(i).setParent((GroupNode)newNode);
+			}
 		}
+		int index = oldNode.getParent().getChildren().indexOf(oldNode);
+		oldNode.getParent().getChildren().set(index, newNode);
+		
+//		if (newNode.getParent().getChildren().contains(oldNode)) {
+//			oldNode.setName(newNode.getName());
+//			if(oldNode instanceof ItemNode) {
+//				ItemNode selectedItem = (ItemNode) oldNode;
+//				ItemNode localItem = (ItemNode) newNode;
+//				selectedItem.setAddress(localItem.getAddress());
+//				selectedItem.setCity(localItem.getCity());
+//				selectedItem.setResult(localItem.getResult());
+//			}
+//			int index = newNode.getParent().getChildren().indexOf(oldNode);
+//			oldNode.getParent().getChildren().set(index, newNode);
+			
+//		}
 	}
 
 	@Override
-	public INode getRoot() {
+	public GroupNode getRoot() {
 		return root;
 	}
-
-//	public INode findParentByName(String name) {
-//		if (root.getName().equals(name)) {
-//			return root;
-//		}
-//		return findParent(name, root.getChildren());
-//	}
-//	
-//	public INode findParents(String name, List<INode> children) {
-//
-//		for(INode node : children) {
-//			if (node.getName().equals(name)) {
-//				System.err.println("yep");
-//				return node;
-//			} else {
-//				System.err.println("nope");
-//				return findParent(name, node.getChildren());
-//			}
-//		}
-//	
-//			
-//
-//		return null;
-//
-//	}
 
 	public INode[] getAllNodes() {
 		INode[] nodes = new INode[1];
@@ -94,8 +87,10 @@ public class NodeService implements INodeService {
 		INode localNode = root;
 		for (int i = 1; i < groups.length; i++) {
 			localNode = find(groups[i], children);
-			if (localNode != null) {
-				children = localNode.getChildren();
+			if (localNode != null  ) {
+				if(localNode.hasChildren()) {
+					children = ((GroupNode)localNode).getChildren();
+				}
 			} else {
 				return null;
 			}
@@ -115,5 +110,10 @@ public class NodeService implements INodeService {
 		return local;
 
 	}
+
+//	@Override
+//	public void updateNode(INode selectedNode, String name) {
+//		selectedNode.setName(name);
+//	}
 
 }

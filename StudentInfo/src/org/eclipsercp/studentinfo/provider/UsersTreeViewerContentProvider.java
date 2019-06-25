@@ -15,7 +15,11 @@ public class UsersTreeViewerContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		return ((INode) parentElement).getChildren().toArray();
+		if(parentElement instanceof GroupNode) {
+		return ((GroupNode) parentElement).getChildren().toArray();
+		}else {
+			return null;
+		}
 	}
 
 	@Override

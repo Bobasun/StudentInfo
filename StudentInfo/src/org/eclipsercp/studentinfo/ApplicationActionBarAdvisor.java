@@ -11,18 +11,19 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipsercp.studentinfo.actions.NewGroupAction;
 import org.eclipsercp.studentinfo.actions.NewItemAction;
+import org.eclipsercp.studentinfo.actions.RemoveItemAction;
 import org.eclipsercp.studentinfo.actions.SaveGroupAction;
-import org.eclipsercp.studentinfo.actions.SaveItemAction;
+import org.eclipsercp.studentinfo.actions.SaveNodeAction;
 import org.eclipsercp.studentinfo.actions.EditItemAction;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private IWorkbenchAction openUser;
 	private IWorkbenchAction newItem;
-	private IWorkbenchAction saveItem;
-//	private IWorkbenchAction a;
+	private IWorkbenchAction saveNode;
 	private IWorkbenchAction newGroup;
-	private SaveGroupAction saveGroup;
+//	private SaveGroupAction saveGroup;
+	private IWorkbenchAction removeAction;
 	
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -35,14 +36,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(openUser);
 		newItem = new NewItemAction(window);
 		register(newItem);
-		saveItem = new SaveItemAction(window);
-		register(saveItem);
-//		a = ActionFactory.SAVE.create(window);
-//		register(a);
+		saveNode = new SaveNodeAction(window);
+		register(saveNode);
 		newGroup = new NewGroupAction(window);
 		register(newGroup);
-		saveGroup = new SaveGroupAction(window);
-		register(saveGroup);
+//		saveGroup = new SaveGroupAction(window);
+//		register(saveGroup);
+		removeAction = new RemoveItemAction(window);
+		register(removeAction);
+		
 		
 	}
 	
@@ -57,11 +59,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());  
 		coolBar.add(toolbar); 
 		toolbar.add(openUser); 
+		toolbar.add(saveNode);
+		toolbar.add(removeAction);
 		toolbar.add(newItem);
-		toolbar.add(saveItem);
-//		toolbar.add(a);
 		toolbar.add(newGroup);
-		toolbar.add(saveGroup);
+//		toolbar.add(saveGroup);
 		
 	}
 

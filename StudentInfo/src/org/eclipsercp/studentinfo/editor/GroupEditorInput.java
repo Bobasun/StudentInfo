@@ -74,6 +74,10 @@ public class GroupEditorInput implements IEditorInput {
 		return true;
 	}
 
+	public void setName(String text) {
+		this.groupName = text;
+	}
+
 	
 
 }

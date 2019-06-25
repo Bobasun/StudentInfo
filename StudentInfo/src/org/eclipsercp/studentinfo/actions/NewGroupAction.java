@@ -10,6 +10,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
+import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
 import org.eclipsercp.studentinfo.editor.GroupEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
@@ -28,6 +31,7 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 		setId(ID);
 		setText("New Group");
 		setToolTipText("New Group");
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.NEW_FOLDER));
 		window.getSelectionService().addSelectionListener(this);
 	}
 
@@ -49,22 +53,23 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 	}
 
 	private void openEditor(GroupEditorInput input, IWorkbenchPage page) {
-		INode parent = getParent();
+		GroupNode parent = getParent();
 		try {
 			page.openEditor(input, GroupEditor.ID);
 			GroupEditor editor = (GroupEditor) page.getActiveEditor();
 			editor.getHidenText().setText(parent.getPath());
+			editor.addSelectedNode(new GroupNode(parent));
 		} catch (PartInitException e) {
 			System.err.println("Error NewGroupAction ");
 		}
 	}
 
-	private INode getParent() {
-		INode parent = null;
+	private GroupNode getParent() {
+		GroupNode parent = null;
 		if (selection.getFirstElement() == null) {
 			parent = NodeService.getInstance().getRoot();
 		} else {
-			parent = (INode) selection.getFirstElement();
+			parent = (GroupNode) selection.getFirstElement();
 		}
 		return parent;
 	}

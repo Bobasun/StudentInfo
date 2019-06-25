@@ -9,6 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -25,6 +26,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.IReusableEditor;
+import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipsercp.studentinfo.controller.Controller;
@@ -36,7 +39,7 @@ import org.eclipsercp.studentinfo.model.Node;
 import org.eclipsercp.studentinfo.model.NodeService;
 import org.eclipsercp.studentinfo.model.RootNode;
 
-public class ItemEditor extends AbstractEditorPart {
+public class ItemEditor extends AbstractEditorPart implements IReusableEditor{
 
 	public final static String ID = "StudentInfo.editor";
 	private Label labelName;
@@ -50,13 +53,13 @@ public class ItemEditor extends AbstractEditorPart {
 	private Text textCity;
 	private Text textResult;
 	private Text hidenText;
-    private ItemNode selectedNode;
+	
+	private ItemNode selectedNode;
+
 	public ItemEditor() {
 	}
+
 	
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-	}
 
 	@Override
 	public void doSaveAs() {
@@ -94,7 +97,7 @@ public class ItemEditor extends AbstractEditorPart {
 		textName = new Text(composite, SWT.BORDER);
 		textName.setData(data);
 		textName.addModifyListener(new TextModifyListener());
-		
+
 		data = new GridData(GridData.BEGINNING);
 		labelGroup = new Label(composite, SWT.NONE);
 		labelGroup.setText("Group");
@@ -140,10 +143,10 @@ public class ItemEditor extends AbstractEditorPart {
 //		Composite compositeImage = new Composite(sashForm,SWT.NONE);
 	}
 
-	public void addSelectedNode(ItemNode node) {
-		this.selectedNode = node;
-//		fillFields();
-	};
+	public void addSelectedNode(ItemNode item) {
+		this.selectedNode = item;
+	}
+
 	@Override
 	public void setFocus() {
 
@@ -190,7 +193,6 @@ public class ItemEditor extends AbstractEditorPart {
 	}
 
 	public void fillFields() {
-//		ItemNode node = () 
 		getTextName().setText(selectedNode.getName());
 		getTextAddress().setText(selectedNode.getAddress());
 		getTextGroup().setText(selectedNode.getGroup());
@@ -200,26 +202,47 @@ public class ItemEditor extends AbstractEditorPart {
 
 	}
 
+	
+   @Override
+	public void doSave(IProgressMonitor monitor) {
+		int fieldResult = Integer.parseInt(getTextResult().getText());
+		ItemNode node = new ItemNode(getTextName().getText(), getTextAddress().getText(), getTextCity().getText(), fieldResult);
+
+//		if(Controller.getInstance().isNodeExists(selectedNode)) {
+			Controller.getInstance().save(selectedNode, node);
+			selectedNode = (ItemNode) Controller.getInstance().getNode(node.getPath());
+			fillFields();
+			
+			ItemEditorInput input = (ItemEditorInput) getEditorInput();
+			input.setName(hidenText.getText() + "/" + getTextName().getText());
+			setDirty(false);
+//		}else {
+//			//msg
+//		}
+	}
+	
 	public void setContent() {
-//		int fieldResult = Integer.parseInt(getTextAddress().getText());
-		ItemNode node = new ItemNode(getTextName().getText(),getTextAddress().getText(),
-				getTextCity().getText(),0);
-		
-		Controller.getInstance().save(node, hidenText.getText());
-		ItemEditorInput input = ((ItemEditorInput) getEditorInput());
-		input.setName(hidenText.getText() + getTextName().getText());
-		
-		setInput(input);
-//		setDirty(false);
+
 	}
 
 	public Text getHidenText() {
 		return hidenText;
 	}
 
-	
-	
 	public void setHidenText(Text hidenText) {
 		this.hidenText = hidenText;
 	}
+	
+	@Override
+	public void setInput(IEditorInput input) {
+		super.setInput(input);
+		firePropertyChange(IWorkbenchPartConstants.PROP_INPUT);
+	}
+
+	public void deleteItem() {
+		Controller.getInstance().remove(
+				selectedNode,getHidenText().getText());
+		
+	}
+	
 }

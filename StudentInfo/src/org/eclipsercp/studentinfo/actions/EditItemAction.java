@@ -3,6 +3,9 @@ package org.eclipsercp.studentinfo.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -10,10 +13,17 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
+import org.eclipsercp.studentinfo.ImageKeys;
+import org.eclipsercp.studentinfo.editor.GroupEditor;
+import org.eclipsercp.studentinfo.editor.GroupEditorInput;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
 import org.eclipsercp.studentinfo.editor.ItemEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
+import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
+import org.eclipsercp.studentinfo.model.RootNode;
 
 public class EditItemAction extends Action implements ISelectionListener, ActionFactory.IWorkbenchAction {
 
@@ -25,7 +35,8 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 		this.window = window;
 		setId(ID);
 		setText("Open");
-		setToolTipText("User selection action!");
+		setToolTipText("Open");
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.OPEN));
 		window.getSelectionService().addSelectionListener(this);
 	}
 
@@ -35,27 +46,47 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 	}
 
 	public void run() {
-		ItemNode item = (ItemNode)selection.getFirstElement();
-		ItemNode user = ((ItemNode)item.clone());
 		IWorkbenchPage page = window.getActivePage();
-		ItemEditorInput input = new ItemEditorInput(user.getPath() + user.getName());
-		try {
-			page.openEditor(input, ItemEditor.ID);
-			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-			editor.addSelectedNode(user);
-			editor.fillFields();
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (selection.getFirstElement() instanceof ItemNode) {
+			ItemNode item = (ItemNode) selection.getFirstElement();
+//			ItemNode node = ((ItemNode) item.clone());
+			ItemEditorInput input = new ItemEditorInput(item.getPath());
+			System.err.println(item.getPath());
+			try {
+				page.openEditor(input, ItemEditor.ID);
+				ItemEditor editor = (ItemEditor) page.getActiveEditor();
+				editor.addSelectedNode(item);
+				editor.fillFields();
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if(selection.getFirstElement() instanceof GroupNode) {
+			GroupNode node  = (GroupNode) selection.getFirstElement();
+//			GroupNode node = (GroupNode) group.clone();
+			GroupEditorInput input = new GroupEditorInput(node.getPath());
+			System.err.println(node.getPath());
+			try {
+				page.openEditor(input, GroupEditor.ID);
+				GroupEditor editor = (GroupEditor) page.getActiveEditor();
+				editor.addSelectedNode(node);
+				editor.fillFields();
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else if(selection.getFirstElement() instanceof RootNode) {
+			
 		}
+
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
-//		System.err.println(incoming  + " Selection");
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(selection.getFirstElement() instanceof ItemNode);
+			setEnabled(selection.getFirstElement() instanceof INode);
 		} else {
 			setEnabled(false);
 		}

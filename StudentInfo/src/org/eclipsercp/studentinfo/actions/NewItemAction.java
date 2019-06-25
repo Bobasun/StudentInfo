@@ -9,8 +9,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
+import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
 import org.eclipsercp.studentinfo.editor.ItemEditorInput;
+import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
@@ -26,6 +30,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		setId(ID);
 		setText("New Item");
 		setToolTipText("New Item");
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.NEW_ITEM));
 		window.getSelectionService().addSelectionListener(this);
 	}
 
@@ -36,23 +41,20 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 
 	@Override
 	public void run() {
-		INode parent = null;
+		GroupNode parent = null;
 		if (selection.getFirstElement() == null) {
 			parent = NodeService.getInstance().getRoot();
 		} else {
-			parent = (INode) selection.getFirstElement();
+			parent = (GroupNode) selection.getFirstElement();
 		}
-		
+
 		IWorkbenchPage page = window.getActivePage();
 		ItemEditorInput input = new ItemEditorInput("");
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-//			editor.addSelectedNode(new Node(parent));
-//			
-//			editor.getTextGroup().setText(parent.getName());
-//			editor.getHidenText().setText(parent.getPath());
-			
+			editor.addSelectedNode(new ItemNode(parent));
+			editor.fillFields();
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

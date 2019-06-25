@@ -54,11 +54,10 @@ public class UsersView extends ViewPart implements ChangeListener {
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
 				if (thisSelection.getFirstElement() instanceof ItemNode) {
 					ItemNode selectedNode = (ItemNode) ((ItemNode) thisSelection.getFirstElement()).clone();
-					System.err.println(selectedNode.getAddress());
+				
 					try {
-
-						getSite().getPage().openEditor(
-								new ItemEditorInput(selectedNode.getName()), ItemEditor.ID);
+						ItemEditorInput input = new ItemEditorInput(selectedNode.getPath());
+						getSite().getPage().openEditor(input, ItemEditor.ID);
 						ItemEditor editor = (ItemEditor) getSite().getPage().getActiveEditor();
 						editor.addSelectedNode(selectedNode);
 						editor.fillFields();
@@ -74,8 +73,8 @@ public class UsersView extends ViewPart implements ChangeListener {
 	private INode[] getRootNode() {
 
 		INodeService service = NodeService.getInstance();
-		INode group = new GroupNode("group 1");
-		INode group2 = new GroupNode("group 1.2");		
+		GroupNode group = new GroupNode("group 1");
+		GroupNode group2 = new GroupNode("group 1.2");
 		INode item1 = new ItemNode("item1", "", "dsa", 1);
 		INode item2 = new ItemNode("item2", "", "dsa", 1);
 		service.addNode(service.getRoot(), group);

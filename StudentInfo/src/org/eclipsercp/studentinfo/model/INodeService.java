@@ -4,11 +4,15 @@ import java.util.List;
 
 public interface INodeService {
 
-	void addNode(INode parent, INode node);
-	void removeNode(INode node);
+	void addNode(GroupNode parent, INode node);
+	
 	void updateNode(INode oldNode, INode newNode);
-	INode getRoot();
+//	void updateNode(INode selectedNode, String name);
+	
+	GroupNode getRoot();
 	INode[] getAllNodes();
 
 	INode find(String path);
+	void removeNode(GroupNode parent,INode node);
+	
 }

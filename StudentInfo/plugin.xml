@@ -5,7 +5,8 @@
    <extension
          id="application"
          point="org.eclipse.core.runtime.applications">
-      <application>
+      <application
+            icon="icons/eclipse16.png">
          <run
                class="org.eclipsercp.studentinfo.Application">
          </run>
@@ -33,8 +34,9 @@
       <editor
             class="org.eclipsercp.studentinfo.editor.ItemEditor"
             default="true"
+            icon="icons/text_align_justify.png"
             id="StudentInfo.editor"
-            name="Item Editor">
+            name="Item Editords">
       </editor>
       <editor
             class="org.eclipsercp.studentinfo.editor.GroupEditor"

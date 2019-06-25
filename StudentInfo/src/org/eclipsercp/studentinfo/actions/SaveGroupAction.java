@@ -35,7 +35,7 @@ public class SaveGroupAction extends Action implements ISelectionListener,IWorkb
 //			if (page.getActiveEditor().getEditorInput().getName().equalsIgnoreCase("group new")) {
 				GroupEditor editor = (GroupEditor) page.getActiveEditor();
 
-				editor.setContent();
+				//editor.setContent();
 //				page.closeEditor(editor, false);
 				
 //			}

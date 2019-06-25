@@ -1,18 +1,19 @@
 package org.eclipsercp.studentinfo.model;
 
-import java.util.List;
-
 public interface INode {
 
 	String getName();
-	INode getParent();
-	List<INode> getChildren();
+	GroupNode getParent();
+	
 	boolean hasChildren();
 
 	String toString();
-	void setParent(INode parent);
-	INode getRoot();
+	void setParent(GroupNode parent);
+	GroupNode getRoot();
 	String getPath();
+	int hashCode();
+	boolean equals(Object obj);
+	void setName(String name);
 	
 	
 }
