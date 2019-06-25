@@ -48,10 +48,9 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 	public void run() {
 		IWorkbenchPage page = window.getActivePage();
 		if (selection.getFirstElement() instanceof ItemNode) {
-			ItemNode item = (ItemNode) selection.getFirstElement();
-//			ItemNode node = ((ItemNode) item.clone());
+			ItemNode qitem = (ItemNode) selection.getFirstElement();
+			ItemNode item = ((ItemNode) qitem.clone());
 			ItemEditorInput input = new ItemEditorInput(item.getPath());
-			System.err.println(item.getPath());
 			try {
 				page.openEditor(input, ItemEditor.ID);
 				ItemEditor editor = (ItemEditor) page.getActiveEditor();
@@ -65,7 +64,6 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 			GroupNode node  = (GroupNode) selection.getFirstElement();
 //			GroupNode node = (GroupNode) group.clone();
 			GroupEditorInput input = new GroupEditorInput(node.getPath());
-			System.err.println(node.getPath());
 			try {
 				page.openEditor(input, GroupEditor.ID);
 				GroupEditor editor = (GroupEditor) page.getActiveEditor();

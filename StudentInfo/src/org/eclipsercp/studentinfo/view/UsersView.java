@@ -18,7 +18,10 @@ import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipsercp.studentinfo.model.RootNode;
 import org.eclipsercp.studentinfo.provider.UsersTreeViewerContentProvider;
+import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
+import org.eclipsercp.studentinfo.editor.GroupEditor;
+import org.eclipsercp.studentinfo.editor.GroupEditorInput;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
 import org.eclipsercp.studentinfo.editor.ItemEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
@@ -27,7 +30,7 @@ import org.eclipsercp.studentinfo.model.INodeService;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
 
-public class UsersView extends ViewPart implements ChangeListener {
+public class UsersView extends ViewPart implements ChangeNodeListener {
 
 	public static final String ID = "org.eclipsercp.studentinfo.treeviewer";
 
@@ -54,11 +57,23 @@ public class UsersView extends ViewPart implements ChangeListener {
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
 				if (thisSelection.getFirstElement() instanceof ItemNode) {
 					ItemNode selectedNode = (ItemNode) ((ItemNode) thisSelection.getFirstElement()).clone();
-				
+
 					try {
 						ItemEditorInput input = new ItemEditorInput(selectedNode.getPath());
 						getSite().getPage().openEditor(input, ItemEditor.ID);
 						ItemEditor editor = (ItemEditor) getSite().getPage().getActiveEditor();
+						editor.addSelectedNode(selectedNode);
+						editor.fillFields();
+					} catch (PartInitException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (thisSelection.getFirstElement() instanceof GroupNode) {
+					GroupNode selectedNode = (GroupNode) thisSelection.getFirstElement();
+					try {
+						GroupEditorInput input = new GroupEditorInput(selectedNode.getPath());
+						getSite().getPage().openEditor(input, GroupEditor.ID);
+						GroupEditor editor = (GroupEditor) getSite().getPage().getActiveEditor();
 						editor.addSelectedNode(selectedNode);
 						editor.fillFields();
 					} catch (PartInitException e) {
@@ -90,7 +105,7 @@ public class UsersView extends ViewPart implements ChangeListener {
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
+	public void stateChanged(ChangeNodeEvent e) {
 		treeViewer.refresh();
 	}
 

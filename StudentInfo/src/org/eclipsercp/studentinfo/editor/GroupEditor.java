@@ -52,9 +52,11 @@ public class GroupEditor extends AbstractEditorPart {
 		Controller.getInstance().save(selectedNode, node);
 //		selectedNode = (GroupNode) Controller.getInstance().getNode(hidenText.getText(), node);
 		selectedNode = node;
-//		GroupEditorInput input = (GroupEditorInput) getEditorInput();
-//		input.setName(hidenText.getText());
+		GroupEditorInput input = (GroupEditorInput) getEditorInput();
+		input.setName(hidenText.getText());
+		System.err.println(hidenText.getText());
 		setDirty(false);
+		//
 	}
 
 	public Text getHidenText() {

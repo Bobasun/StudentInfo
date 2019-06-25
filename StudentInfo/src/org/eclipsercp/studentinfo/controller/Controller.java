@@ -11,12 +11,13 @@ import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
+import org.eclipsercp.studentinfo.view.ChangeNodeListener;
 
 public class Controller {
 
 	private static Controller instance;
 	private INodeService service = NodeService.getInstance();
-	private List<ChangeListener> listListeners = new ArrayList<>();
+	private List<ChangeNodeListener> listListeners = new ArrayList<>();
 
 	private Controller() {
 	}
@@ -28,37 +29,23 @@ public class Controller {
 		return instance;
 	}
 
-//	public void save(GroupNode node, String parent) {
-//		INode parentNode = service.find(parent);
-//		if (!parentNode.getChildren().contains(node)) {
-//			service.addNode(parentNode, node);
-//		} else {
-//			service.updateNode(null, node);
-//
-//		}
-////		if (node.getRoot() == service.getRoot()) {	
-////		}
-//
-//		notifyAllListeners(null);
-//	}
-
 	public void remove(INode node, String parentName) {
 		GroupNode parent = (GroupNode) service.find(parentName);
 		service.removeNode(parent, node);
 		notifyAllListeners(null);
 	}
 
-	public void addListener(ChangeListener lis) {
+	public void addListener(ChangeNodeListener lis) {
 		listListeners.add(lis);
 	}
 
-	private void notifyAllListeners(ChangeEvent event) {
+	private void notifyAllListeners(ChangeNodeEvent event) {
 		listListeners.forEach(listener -> listener.stateChanged(event));
 //		for (int i = 0; i < list.size(); i++)
 //			list.get(i).stateChanged(event);
 	}
 
-	public void removeListener(ChangeListener lis) {
+	public void removeListener(ChangeNodeListener lis) {
 		listListeners.remove(lis);
 	}
 
@@ -70,18 +57,24 @@ public class Controller {
 	}
 
 	public void save(INode selectedNode, INode newNode) {
-		
+		EnumAction action;
 		GroupNode parentNode = (GroupNode) service.find(selectedNode.getParent().getPath());
 		if (parentNode.getChildren().contains((INode) selectedNode)) {
 //			newNode.setParent(parentNode);
 			service.updateNode(selectedNode, newNode);
-			
+			action = EnumAction.UPDATE_NODE;
 		} else {
 			service.addNode(parentNode, newNode);
+			action = EnumAction.ADD_NODE;
 		}
-		
-		notifyAllListeners(null);
+		if (isNodeExists(newNode)) {
+			notifyAllListeners(createNodeEvent(action, newNode));
+		}
 
+	}
+
+	private ChangeNodeEvent createNodeEvent(EnumAction action, INode newNode) {
+		return new ChangeNodeEvent(action, newNode);
 	}
 
 	public INode getNode(String path) {
@@ -89,17 +82,10 @@ public class Controller {
 		return service.find(path);
 	}
 
-	public boolean isNodeExists(ItemNode selectedNode) {
-		GroupNode parent = (GroupNode) getNode(selectedNode.getParent().getPath());
-//		String checkPath = parent.getPath();
-		service.getRoot().getChildren();
-		
-//		if()
-		return false;
+	public boolean isNodeExists(INode node) {
+		return service.find(node.getPath()) != null ? true : false;
 	}
 }
-
-
 
 //public INode findParents(String name, List<INode> children) {
 //

@@ -18,10 +18,10 @@ public class ItemNode extends Node {
 	}
 
 	public ItemNode(GroupNode parent) {
-		this("","","", 0);
+		this("", "", "", 0);
 		this.parent = parent;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -63,6 +63,7 @@ public class ItemNode extends Node {
 		return name + " " + address;
 	}
 
+//
 	@Override
 	public int hashCode() {
 		super.hashCode();
@@ -76,13 +77,10 @@ public class ItemNode extends Node {
 
 	@Override
 	public boolean equals(Object obj) {
-		super.equals(obj);
-		if (this == obj)
-			return true;
-		if (obj == null)
+
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		ItemNode other = (ItemNode) obj;
 		if (address == null) {
 			if (other.address != null)
@@ -99,6 +97,4 @@ public class ItemNode extends Node {
 		return true;
 	}
 
-	
-	
 }

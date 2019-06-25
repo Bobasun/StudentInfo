@@ -29,9 +29,6 @@ public class GroupNode extends Node {
 
 	@Override
 	public boolean hasChildren() {
-		if (nodes == null) {
-			return false;
-		}
 		return true;
 	}
 
