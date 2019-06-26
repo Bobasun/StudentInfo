@@ -59,7 +59,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 	private Text textAddress;
 	private Text textCity;
 	private Text textResult;
-	private Text hidenText;
+//	private Text hidenText;
 
 	private ItemNode selectedNode;
 
@@ -143,8 +143,6 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		textResult.setData(data);
 		textResult.addModifyListener(new TextModifyListener());
 
-		hidenText = new Text(parent, SWT.NONE);
-		hidenText.setVisible(false);
 		Controller.getInstance().addListener(new ChangeNodeListener() {
 
 			public void stateChanged(ChangeNodeEvent event) {
@@ -155,27 +153,32 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				case UPDATE_NODE:
 					if (event.getNode() instanceof GroupNode) {
 //						((ItemEditorInput)ItemEditor.this.getEditorInput()).setName(((GroupNode) event.getNode()).getPath());;
-						ItemEditor.this.selectedNode.setParent((GroupNode) event.getNode());
-						ItemEditor.this.fillFields();
-						
-//						IEditorReference reference = null;
-//						IEditorReference[] refs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-//								.getEditorReferences();
-//						for (IEditorReference iEditorReference : refs) {
-//							try {
-//								if (iEditorReference.getEditorInput().getName().equals(event.getNode().getPath())) {
-//									reference = iEditorReference;
-//								}
-//							} catch (PartInitException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//						}
+//						ItemEditor.this.selectedNode.setParent((GroupNode) event.getNode());
+//						ItemEditor.this.fillFields();
+
+						IEditorReference reference = null;
+						IEditorReference[] refs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+								.getEditorReferences();
+						for (IEditorReference iEditorReference : refs) {
+							try {
+								System.err.println(iEditorReference.getEditorInput().getName() + " +refEditor+");
+								System.err.println(event.getNode().getPath() + "/item1" + "+node + parent+");
+								if (iEditorReference.getEditorInput().getName()
+										.equals(event.getNode().getPath() + "/item1")) {
+									reference = iEditorReference;
+
+									System.err.println("start" + reference.getName());
+								}
+							} catch (PartInitException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 //						
-						
-						ItemEditor editor = (ItemEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(new ItemEditorInput(event.getNode().getPath() + "/item1"));
+//						ItemEditor editor = (ItemEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(reference.getEditorInput());
+//						ItemEditor editor = (ItemEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(new ItemEditorInput(event.getNode().getPath() + "/item1"));
 //						ItemEditor editor = (ItemEditor) getSite().getPage().getWorkbenchWindow().getActivePage().findEditor(new ItemEditorInput(event.getNode().getPath()));
-						System.err.println("Item editor " + (editor == null));
+//						System.err.println("Item editor " + (editor == null));
 					}
 
 					System.err.println(event.getNode().getPath());
@@ -253,7 +256,6 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		getTextGroup().setText(selectedNode.getGroup());
 		getTextCity().setText(selectedNode.getCity());
 		getTextResult().setText("" + selectedNode.getResult());
-		getHidenText().setText(selectedNode.getParent().getPath());
 
 	}
 
@@ -266,38 +268,20 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
-				selectedNode = (ItemNode) Controller.getInstance().getNode(node.getPath());
-
-				fillFields();
-
+				selectedNode = node;
 				ItemEditorInput input = (ItemEditorInput) getEditorInput();
-//			input.setName(hidenText.getText() + "/" + getTextName().getText());
 				input.setName(selectedNode.getPath());
 				setDirty(false);
-			} else { // msg
+			} else { 
 				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 						"Node already exist with this name");
-//				this.getSite().getPage().getWorkbenchWindow().getShell().getDisplay().
 			}
 //			}
 		} else {
 			MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 					"Can't save node, because it was deleted");
 			this.getSite().getPage().closeEditor(this, false);
-			System.err.println("Eeee");
 		}
-	}
-
-	public void setContent() {
-
-	}
-
-	public Text getHidenText() {
-		return hidenText;
-	}
-
-	public void setHidenText(Text hidenText) {
-		this.hidenText = hidenText;
 	}
 
 	@Override
@@ -306,8 +290,8 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		firePropertyChange(IWorkbenchPartConstants.PROP_INPUT);
 	}
 
-	public void deleteItem() {
-		Controller.getInstance().remove(selectedNode, getHidenText().getText());
+	public void deleteItem() { // delete second param
+		Controller.getInstance().remove(selectedNode, selectedNode.getParent().getPath());
 
 	}
 

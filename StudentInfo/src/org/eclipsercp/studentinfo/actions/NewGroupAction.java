@@ -57,7 +57,7 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 		try {
 			page.openEditor(input, GroupEditor.ID);
 			GroupEditor editor = (GroupEditor) page.getActiveEditor();
-			editor.getHidenText().setText(parent.getPath());
+//			editor.getHidenText().setText(parent.getPath());
 			editor.addSelectedNode(new GroupNode(parent));
 		} catch (PartInitException e) {
 			System.err.println("Error NewGroupAction ");

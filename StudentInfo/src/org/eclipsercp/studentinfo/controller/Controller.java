@@ -41,8 +41,6 @@ public class Controller {
 
 	private void notifyAllListeners(ChangeNodeEvent event) {
 		listListeners.forEach(listener -> listener.stateChanged(event));
-//		for (int i = 0; i < list.size(); i++)
-//			list.get(i).stateChanged(event);
 	}
 
 	public void removeListener(ChangeNodeListener lis) {
@@ -60,7 +58,6 @@ public class Controller {
 		EnumAction action;
 		GroupNode parentNode = (GroupNode) service.find(selectedNode.getParent().getPath());
 		if (parentNode.getChildren().contains((INode) selectedNode)) {
-//			newNode.setParent(parentNode);
 			service.updateNode(selectedNode, newNode);
 			action = EnumAction.UPDATE_NODE;
 		} else {
@@ -72,7 +69,7 @@ public class Controller {
 		}
 
 	}
-
+	
 	private ChangeNodeEvent createNodeEvent(EnumAction action, INode newNode) {
 		return new ChangeNodeEvent(action, newNode);
 	}

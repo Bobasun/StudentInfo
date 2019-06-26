@@ -64,6 +64,7 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 			GroupNode node  = (GroupNode) selection.getFirstElement();
 //			GroupNode node = (GroupNode) group.clone();
 			GroupEditorInput input = new GroupEditorInput(node.getPath());
+			System.err.println("----" + node.getPath());
 			try {
 				page.openEditor(input, GroupEditor.ID);
 				GroupEditor editor = (GroupEditor) page.getActiveEditor();

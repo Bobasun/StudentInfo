@@ -1,7 +1,10 @@
 package org.eclipsercp.studentinfo.editor;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -9,6 +12,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
@@ -18,15 +24,15 @@ import org.eclipsercp.studentinfo.model.NodeService;
 public class GroupEditor extends AbstractEditorPart {
 
 	public final static String ID = "StudentInfo.groupEditor";
+	private Text textParentGroup;
+	private Label labelParentGroup;
+	private Text textGroup;
+	private Label labelGroup;
+	private GroupNode selectedNode;
 
 	public GroupEditor() {
 		// TODO Auto-generated constructor stub
 	}
-
-	private Text textGroup;
-	private Label labelGroup;
-	private Text hidenText;
-	private GroupNode selectedNode;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -37,30 +43,52 @@ public class GroupEditor extends AbstractEditorPart {
 		layout.marginLeft = 30;
 		composite.setLayout(layout);
 
+		labelParentGroup = new Label(composite, SWT.NONE);
+		labelParentGroup.setText("Parent Group");
+		
+		textParentGroup = new Text(composite, SWT.NONE);
+		textParentGroup.setEnabled(false);
+		
 		labelGroup = new Label(composite, SWT.NONE);
 		labelGroup.setText("Group");
 
 		textGroup = new Text(composite, SWT.NONE);
-		hidenText = new Text(parent, SWT.NONE);
-		hidenText.setVisible(false);
 		textGroup.addModifyListener(new TextModifyListener());
 	}
 
-	 @Override
-		public void doSave(IProgressMonitor monitor) {
+	@Override
+	public void doSave(IProgressMonitor monitor) {
 		GroupNode node = new GroupNode(textGroup.getText());
-		Controller.getInstance().save(selectedNode, node);
-//		selectedNode = (GroupNode) Controller.getInstance().getNode(hidenText.getText(), node);
-		selectedNode = node;
-		GroupEditorInput input = (GroupEditorInput) getEditorInput();
-		input.setName(hidenText.getText());
-		System.err.println(hidenText.getText());
+		if (!isChildrenOpen(selectedNode.getChildren())) {
+			Controller.getInstance().save(selectedNode, node);
+			selectedNode = node;
+			GroupEditorInput input = (GroupEditorInput) getEditorInput();
+			input.setName(selectedNode.getPath());
+		} else {
+			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
+		}
 		setDirty(false);
-		//
 	}
 
-	public Text getHidenText() {
-		return hidenText;
+	private boolean isChildrenOpen(List<INode> nodes) {
+		IEditorPart e = null;
+		boolean isOpen = false;
+		for (INode node : nodes) {
+			if (node instanceof GroupNode) {
+				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.findEditor(new GroupEditorInput(node.getPath()));
+				isOpen = (e != null || isChildrenOpen(((GroupNode) node).getChildren())) ? true : false;
+//				isOpen = isChildrenOpen(((GroupNode) node).getChildren());
+			} else if (node instanceof ItemNode) {
+				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.findEditor(new ItemEditorInput(node.getPath()));
+				isOpen = e != null ? true : false;
+			}
+			if (isOpen) {
+				break;
+			}
+		}
+		return isOpen;
 	}
 
 	public Text getTextGroup() {
@@ -71,14 +99,14 @@ public class GroupEditor extends AbstractEditorPart {
 		selectedNode = node;
 	}
 
-	public void deleteGroup() {
-		Controller.getInstance().remove(selectedNode, hidenText.getText());
+	public void deleteGroup() { // delete second param
+		Controller.getInstance().remove(selectedNode, selectedNode.getParent().getPath());
 
 	}
 
 	public void fillFields() {
 		textGroup.setText(selectedNode.getName());
-		getHidenText().setText(selectedNode.getParent().getPath());
+		textParentGroup.setText(selectedNode.getParent().getName());
 	}
 
 }
