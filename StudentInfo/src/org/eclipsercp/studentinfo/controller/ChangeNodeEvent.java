@@ -5,23 +5,23 @@ import org.eclipsercp.studentinfo.model.INode;
 public class ChangeNodeEvent  {
 
 	private EnumAction action;
-	private INode node;
-	public ChangeNodeEvent(EnumAction action, INode node) {
-	
+	private INode newNode;
+	private INode oldNode;
+	public ChangeNodeEvent(EnumAction action, INode oldNode, INode newNode) {
+		this.oldNode = oldNode;
 		this.action = action;
-		this.node = node;
+		this.newNode = newNode;
 	}
 	public EnumAction getAction() {
 		return action;
 	}
-	public void setAction(EnumAction action) {
-		this.action = action;
+
+	public INode getNewNode() {
+		return newNode;
 	}
-	public INode getNode() {
-		return node;
-	}
-	public void setNode(INode node) {
-		this.node = node;
+
+	public INode getOldNode() {
+		return oldNode;
 	}
 	
 	

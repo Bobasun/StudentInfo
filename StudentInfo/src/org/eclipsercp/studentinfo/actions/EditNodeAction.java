@@ -16,22 +16,22 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.ImageKeys;
+import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
-import org.eclipsercp.studentinfo.editor.GroupEditorInput;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
-import org.eclipsercp.studentinfo.editor.ItemEditorInput;
+import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.RootNode;
 
-public class EditItemAction extends Action implements ISelectionListener, ActionFactory.IWorkbenchAction {
+public class EditNodeAction extends Action implements ISelectionListener, ActionFactory.IWorkbenchAction {
 
 	private final IWorkbenchWindow window;
 	public final static String ID = "org.eclipsercp.studentinfo.userselectaction";
 	private IStructuredSelection selection;
 
-	public EditItemAction(IWorkbenchWindow window) {
+	public EditNodeAction(IWorkbenchWindow window) {
 		this.window = window;
 		setId(ID);
 		setText("Open");
@@ -47,45 +47,31 @@ public class EditItemAction extends Action implements ISelectionListener, Action
 
 	public void run() {
 		IWorkbenchPage page = window.getActivePage();
-		if (selection.getFirstElement() instanceof ItemNode) {
-			ItemNode qitem = (ItemNode) selection.getFirstElement();
-			ItemNode item = ((ItemNode) qitem.clone());
-			ItemEditorInput input = new ItemEditorInput(item.getPath());
-			try {
+		AbstractEditorPart editor = null;
+		INode item = (INode) selection.getFirstElement();
+		NodeEditorInput input = new NodeEditorInput(item.getPath());
+		try {
+			if (selection.getFirstElement() instanceof ItemNode) {
 				page.openEditor(input, ItemEditor.ID);
-				ItemEditor editor = (ItemEditor) page.getActiveEditor();
-				editor.addSelectedNode(item);
-				editor.fillFields();
-			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else if(selection.getFirstElement() instanceof GroupNode) {
-			GroupNode node  = (GroupNode) selection.getFirstElement();
-//			GroupNode node = (GroupNode) group.clone();
-			GroupEditorInput input = new GroupEditorInput(node.getPath());
-			System.err.println("----" + node.getPath());
-			try {
+			} else if (selection.getFirstElement() instanceof GroupNode) {
 				page.openEditor(input, GroupEditor.ID);
-				GroupEditor editor = (GroupEditor) page.getActiveEditor();
-				editor.addSelectedNode(node);
-				editor.fillFields();
-			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			}else {
+				return;
 			}
-			
-		} else if(selection.getFirstElement() instanceof RootNode) {
-			
-		}
-
+			editor = (AbstractEditorPart) page.getActiveEditor();
+			editor.addSelectedNode(item);
+			editor.fillFields();
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}	
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(selection.getFirstElement() instanceof INode);
+			setEnabled(
+					selection.getFirstElement() instanceof INode && !(selection.getFirstElement() instanceof RootNode));
 		} else {
 			setEnabled(false);
 		}

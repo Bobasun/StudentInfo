@@ -13,7 +13,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
-import org.eclipsercp.studentinfo.editor.ItemEditorInput;
+import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
@@ -49,7 +49,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		}
 
 		IWorkbenchPage page = window.getActivePage();
-		ItemEditorInput input = new ItemEditorInput("");
+		NodeEditorInput input = new NodeEditorInput("");
 		try {
 			page.openEditor(input, ItemEditor.ID);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();

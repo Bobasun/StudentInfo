@@ -9,8 +9,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipsercp.studentinfo.model.INode;
 
-public class AbstractEditorPart extends EditorPart {
+public abstract class  AbstractEditorPart extends EditorPart {
 	
 	protected boolean dirty;
 	
@@ -67,8 +68,16 @@ public class AbstractEditorPart extends EditorPart {
 	class TextModifyListener implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
-			setDirty(true);
+			if(checkModifyFields()) {
+				setDirty(true);
+			}else {
+				setDirty(false);
+			}
 		}
 	}
+	
+	protected abstract boolean checkModifyFields();
+	public abstract  void addSelectedNode(INode item);
+    public abstract void fillFields();
 
 }

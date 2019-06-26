@@ -1,6 +1,5 @@
 package org.eclipsercp.studentinfo.editor;
 
-import java.awt.event.TextEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,20 +7,34 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -34,6 +47,9 @@ import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
+import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.controller.EnumAction;
@@ -90,7 +106,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		layout.horizontalSpacing = 15;
 		layout.verticalSpacing = 15;
 		composite.setLayout(layout);
-
+		
 		GridData data = new GridData(GridData.BEGINNING);
 
 		labelName = new Label(composite, SWT.NONE);
@@ -151,39 +167,22 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				// MY_ACTION.REMOVE || MY_ACTION.EDIT){
 				switch (event.getAction()) {
 				case UPDATE_NODE:
-					if (event.getNode() instanceof GroupNode) {
-//						((ItemEditorInput)ItemEditor.this.getEditorInput()).setName(((GroupNode) event.getNode()).getPath());;
-//						ItemEditor.this.selectedNode.setParent((GroupNode) event.getNode());
-//						ItemEditor.this.fillFields();
-
-						IEditorReference reference = null;
-						IEditorReference[] refs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-								.getEditorReferences();
-						for (IEditorReference iEditorReference : refs) {
-							try {
-								System.err.println(iEditorReference.getEditorInput().getName() + " +refEditor+");
-								System.err.println(event.getNode().getPath() + "/item1" + "+node + parent+");
-								if (iEditorReference.getEditorInput().getName()
-										.equals(event.getNode().getPath() + "/item1")) {
-									reference = iEditorReference;
-
-									System.err.println("start" + reference.getName());
-								}
-							} catch (PartInitException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-//						
-//						ItemEditor editor = (ItemEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(reference.getEditorInput());
-//						ItemEditor editor = (ItemEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(new ItemEditorInput(event.getNode().getPath() + "/item1"));
-//						ItemEditor editor = (ItemEditor) getSite().getPage().getWorkbenchWindow().getActivePage().findEditor(new ItemEditorInput(event.getNode().getPath()));
-//						System.err.println("Item editor " + (editor == null));
+					if (event.getNewNode() instanceof GroupNode) {
+					  if(selectedNode.getPath().substring(0, event.getOldNode().getPath().length()).equals(event.getOldNode().getPath())) {
+						  System .err.println("item path: " + selectedNode.getPath());
+						  System.err.println("part of path: " + selectedNode.getPath().substring(0, event.getOldNode().getPath().length()));
+						  System.err.println("old node path: " +  event.getOldNode().getPath());
+						  // set input, set group, set title
+					  }		
+//					 
 					}
 
-					System.err.println(event.getNode().getPath());
+					System.err.println(event.getNewNode().getPath());
 					break;
+				case REMOVE_NODE:
 
+					System.err.println("removed " + event.getNewNode().getName());
+					break;
 				default:
 					System.err.println("++");
 					System.err.println("dddd");
@@ -198,11 +197,76 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 			}
 
 		});
+		Canvas canvas = new Canvas(sashForm, SWT.NONE);
+		canvas.setLayout(new FillLayout());
+		Button button = new Button(canvas,SWT.PUSH);
+		button.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				 FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+//		            dialog.setFilterNames(FILTER_NAMES);
+//		            dialog.setFilterExtensions(FILTER_EXTS);
+		            String result = dialog.open();
+		            if(result!=null)
+		               {
+//		                   text.setText(result);
+//		            	ResourceManager resourceManager = new LocalResourceManager(parentRegistry)
+//		                   Image image = ResourceManager.getImage(result);
+		            	ImageDescriptor idesc = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, result);
+		                Image image = idesc.createImage() ;  
+		                button.setImage(image);
+//		            	ImageData imgData = image.getImageData();
+//		                   imgData=imgData.scaledTo(200, 200);
+//
+//		                   ImageLoader imageLoader = new ImageLoader();
+//		                   imageLoader.data = new ImageData[] {imgData};
+//		                   imageLoader.save(result, SWT.IMAGE_COPY);
+//
+//		                   System.out.println(imgData.width+"....."+imgData.height);
+//		                   lbl_image_text.setBounds(25,88,imgData.width+10,imgData.height+10);
+//		                   //Image size set to Label
+//		                   //lbl_image_text.setBounds(25,88,image.getBounds().width+10,image.getBounds().height+10);
+//		                   lbl_image_text.setImage(SWTResourceManager.getImage(result));
+		               }				
+			}
+		
+		});
+//		button.setImage(image);
+//		Image image = new Image(Display.getCurrent(), "icon/folder.png");
+//		canvas.addPaintListener(new PaintListener() {
+//
+//			@Override
+//			public void paintControl(PaintEvent e) {
+//				e.gc.drawImage(image, 0, 0);
+//			}
+//		});
 //		Composite compositeImage = new Composite(sashForm,SWT.NONE);
 	}
 
-	public void addSelectedNode(ItemNode item) {
-		this.selectedNode = item;
+	public ImageDescriptor getImageDescriptor(final String path) {
+		ImageDescriptor imgD = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, path);
+		if (imgD == null) {
+			return null;
+		}
+		return imgD;
+	}
+
+//	public Image getImage(final String path)
+//	{
+//	    Image image = imageCacheMap.get(path);
+//
+//	    if (image == null)
+//	    {
+//	        image = getImageDescripto(path).createImage();
+//	        imageCacheMap.put(path, image);
+//	    }
+//
+//	    return image;
+//	}
+	
+	public void addSelectedNode(INode item) {
+		this.selectedNode = (ItemNode)item;
 	}
 
 	@Override
@@ -269,10 +333,10 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
-				ItemEditorInput input = (ItemEditorInput) getEditorInput();
+				NodeEditorInput input = (NodeEditorInput) getEditorInput();
 				input.setName(selectedNode.getPath());
 				setDirty(false);
-			} else { 
+			} else {
 				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 						"Node already exist with this name");
 			}
@@ -294,5 +358,15 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		Controller.getInstance().remove(selectedNode, selectedNode.getParent().getPath());
 
 	}
+
+	@Override
+	protected boolean checkModifyFields() {
+		return !textAddress.getText().equals(selectedNode.getAddress())
+				|| !textCity.getText().equals(selectedNode.getCity()) 
+				|| !textName.getText().equals(selectedNode.getName())
+				|| !textResult.getText().equals("" +selectedNode.getResult());
+	}
+	
+
 
 }

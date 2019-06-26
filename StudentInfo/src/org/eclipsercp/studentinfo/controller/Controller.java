@@ -32,7 +32,7 @@ public class Controller {
 	public void remove(INode node, String parentName) {
 		GroupNode parent = (GroupNode) service.find(parentName);
 		service.removeNode(parent, node);
-		notifyAllListeners(null);
+		notifyAllListeners(createNodeEvent(EnumAction.REMOVE_NODE, node, null));
 	}
 
 	public void addListener(ChangeNodeListener lis) {
@@ -65,13 +65,13 @@ public class Controller {
 			action = EnumAction.ADD_NODE;
 		}
 		if (isNodeExists(newNode)) {
-			notifyAllListeners(createNodeEvent(action, newNode));
+			notifyAllListeners(createNodeEvent(action, selectedNode, newNode));
 		}
 
 	}
 	
-	private ChangeNodeEvent createNodeEvent(EnumAction action, INode newNode) {
-		return new ChangeNodeEvent(action, newNode);
+	private ChangeNodeEvent createNodeEvent(EnumAction action, INode oldNode, INode newNode) {
+		return new ChangeNodeEvent(action, oldNode, newNode);
 	}
 
 	public INode getNode(String path) {

@@ -18,12 +18,12 @@ import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipsercp.studentinfo.model.RootNode;
 import org.eclipsercp.studentinfo.provider.UsersTreeViewerContentProvider;
+import org.eclipsercp.studentinfo.provider.UsersTreeViewerLabelProvider;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
-import org.eclipsercp.studentinfo.editor.GroupEditorInput;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
-import org.eclipsercp.studentinfo.editor.ItemEditorInput;
+import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
@@ -48,7 +48,9 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		treeViewer.setContentProvider(new UsersTreeViewerContentProvider());
 		treeViewer.setInput(getRootNode());
+		treeViewer.setLabelProvider(new UsersTreeViewerLabelProvider());
 		getSite().setSelectionProvider(treeViewer);
+		treeViewer.expandAll();
 		controller.addListener(this);
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 
@@ -59,7 +61,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 					ItemNode selectedNode = (ItemNode) ((ItemNode) thisSelection.getFirstElement()).clone();
 
 					try {
-						ItemEditorInput input = new ItemEditorInput(selectedNode.getPath());
+						NodeEditorInput input = new NodeEditorInput(selectedNode.getPath());
 						getSite().getPage().openEditor(input, ItemEditor.ID);
 						ItemEditor editor = (ItemEditor) getSite().getPage().getActiveEditor();
 						editor.addSelectedNode(selectedNode);
@@ -71,7 +73,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 				} else if (thisSelection.getFirstElement() instanceof GroupNode) {
 					GroupNode selectedNode = (GroupNode) thisSelection.getFirstElement();
 					try {
-						GroupEditorInput input = new GroupEditorInput(selectedNode.getPath());
+						NodeEditorInput input = new NodeEditorInput(selectedNode.getPath());
 						getSite().getPage().openEditor(input, GroupEditor.ID);
 						GroupEditor editor = (GroupEditor) getSite().getPage().getActiveEditor();
 						editor.addSelectedNode(selectedNode);
@@ -107,6 +109,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 	@Override
 	public void stateChanged(ChangeNodeEvent e) {
 		treeViewer.refresh();
+		treeViewer.expandAll();
 	}
 
 }

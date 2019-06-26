@@ -4,56 +4,50 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-public class GroupEditorInput implements IEditorInput {
+public class NodeEditorInput implements IEditorInput {
 
-	private String groupName;
+	private String name;
 	
-	public GroupEditorInput(String groupName) {
+	public NodeEditorInput(String name) {
 		super();
-		this.groupName = groupName;
+		this.name = name;
 	}
 
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean exists() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return groupName;
+		return name;
 	}
 
 	@Override
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getToolTipText() {
-		// TODO Auto-generated method stub
-		return groupName;
+		return name;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -65,19 +59,17 @@ public class GroupEditorInput implements IEditorInput {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GroupEditorInput other = (GroupEditorInput) obj;
-		if (groupName == null) {
-			if (other.groupName != null)
+		NodeEditorInput other = (NodeEditorInput) obj;
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!groupName.equals(other.groupName))
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}
 
-	public void setName(String text) {
-		this.groupName = text;
+	public void setName(String name) {
+		this.name = name;
 	}
-
 	
-
 }

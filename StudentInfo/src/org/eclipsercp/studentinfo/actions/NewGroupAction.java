@@ -14,7 +14,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
-import org.eclipsercp.studentinfo.editor.GroupEditorInput;
+import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
@@ -47,12 +47,12 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 
 	@Override
 	public void run() {
-		GroupEditorInput input = new GroupEditorInput("new Group");
+		NodeEditorInput input = new NodeEditorInput("new Group");
 		openEditor(input, window.getActivePage());
 
 	}
 
-	private void openEditor(GroupEditorInput input, IWorkbenchPage page) {
+	private void openEditor(NodeEditorInput input, IWorkbenchPage page) {
 		GroupNode parent = getParent();
 		try {
 			page.openEditor(input, GroupEditor.ID);

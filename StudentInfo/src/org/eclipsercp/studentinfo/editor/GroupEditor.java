@@ -59,14 +59,14 @@ public class GroupEditor extends AbstractEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		GroupNode node = new GroupNode(textGroup.getText());
-		if (!isChildrenOpen(selectedNode.getChildren())) {
+//		if (!isChildrenOpen(selectedNode.getChildren())) {
 			Controller.getInstance().save(selectedNode, node);
 			selectedNode = node;
-			GroupEditorInput input = (GroupEditorInput) getEditorInput();
+			NodeEditorInput input = (NodeEditorInput) getEditorInput();
 			input.setName(selectedNode.getPath());
-		} else {
-			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
-		}
+//		} else {
+//			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
+//		}
 		setDirty(false);
 	}
 
@@ -76,12 +76,12 @@ public class GroupEditor extends AbstractEditorPart {
 		for (INode node : nodes) {
 			if (node instanceof GroupNode) {
 				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new GroupEditorInput(node.getPath()));
+						.findEditor(new NodeEditorInput(node.getPath()));
 				isOpen = (e != null || isChildrenOpen(((GroupNode) node).getChildren())) ? true : false;
 //				isOpen = isChildrenOpen(((GroupNode) node).getChildren());
 			} else if (node instanceof ItemNode) {
 				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new ItemEditorInput(node.getPath()));
+						.findEditor(new NodeEditorInput(node.getPath()));
 				isOpen = e != null ? true : false;
 			}
 			if (isOpen) {
@@ -95,8 +95,8 @@ public class GroupEditor extends AbstractEditorPart {
 		return textGroup;
 	}
 
-	public void addSelectedNode(GroupNode node) {
-		selectedNode = node;
+	public void addSelectedNode(INode node) {
+		selectedNode = (GroupNode)node;
 	}
 
 	public void deleteGroup() { // delete second param
@@ -107,6 +107,12 @@ public class GroupEditor extends AbstractEditorPart {
 	public void fillFields() {
 		textGroup.setText(selectedNode.getName());
 		textParentGroup.setText(selectedNode.getParent().getName());
+	}
+
+	@Override
+	protected boolean checkModifyFields() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

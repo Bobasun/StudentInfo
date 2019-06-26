@@ -8,4 +8,5 @@ public interface ImageKeys {
 	public static final String SAVE = "icons/disk.png";
 	public static final String SAVE_ALL = "icons/disk_multiple.png";
 	public static final String OPEN = "icons/folder.png";
+	public static final String ITEM = "icons/eclipse16.png";
 }
