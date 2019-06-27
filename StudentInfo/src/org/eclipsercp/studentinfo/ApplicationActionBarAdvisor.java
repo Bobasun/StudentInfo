@@ -12,6 +12,7 @@ import org.eclipsercp.studentinfo.actions.EditNodeAction;
 import org.eclipsercp.studentinfo.actions.NewGroupAction;
 import org.eclipsercp.studentinfo.actions.NewItemAction;
 import org.eclipsercp.studentinfo.actions.RemoveNodeAction;
+import org.eclipsercp.studentinfo.actions.SaveAllNodesAction;
 import org.eclipsercp.studentinfo.actions.SaveNodeAction;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
@@ -21,6 +22,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction saveNode;
 	private IWorkbenchAction newGroup;
 	private IWorkbenchAction removeAction;
+	private IWorkbenchAction saveAllNodes;
 	
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
@@ -35,9 +37,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(newItem);
 		saveNode = new SaveNodeAction(window);
 		register(saveNode);
+		saveAllNodes = new SaveAllNodesAction(window);
+		register(saveAllNodes);
 		newGroup = new NewGroupAction(window);
 		register(newGroup);
-
 		removeAction = new RemoveNodeAction(window);
 		register(removeAction);
 		
@@ -56,6 +59,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		coolBar.add(toolbar); 
 		toolbar.add(editUser); 
 		toolbar.add(saveNode);
+		toolbar.add(saveAllNodes);
 		toolbar.add(removeAction);
 		toolbar.add(newItem);
 		toolbar.add(newGroup);

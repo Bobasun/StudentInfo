@@ -76,6 +76,12 @@ public abstract class  AbstractEditorPart extends EditorPart {
 		}
 	}
 	
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		super.dispose();
+	}
+
 	protected abstract boolean checkModifyFields();
 	public abstract  void addSelectedNode(INode item);
     public abstract void fillFields();

@@ -15,11 +15,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
+import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
+import org.eclipsercp.studentinfo.view.ChangeNodeListener;
 
 public class GroupEditor extends AbstractEditorPart {
 
@@ -29,9 +31,16 @@ public class GroupEditor extends AbstractEditorPart {
 	private Text textGroup;
 	private Label labelGroup;
 	private GroupNode selectedNode;
+	private ChangeNodeListener groupListener;
 
 	public GroupEditor() {
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void dispose() {
+		Controller.getInstance().removeListener(groupListener);
+		super.dispose();
 	}
 
 	@Override
@@ -45,29 +54,77 @@ public class GroupEditor extends AbstractEditorPart {
 
 		labelParentGroup = new Label(composite, SWT.NONE);
 		labelParentGroup.setText("Parent Group");
-		
+
 		textParentGroup = new Text(composite, SWT.NONE);
 		textParentGroup.setEnabled(false);
-		
+
 		labelGroup = new Label(composite, SWT.NONE);
 		labelGroup.setText("Group");
 
 		textGroup = new Text(composite, SWT.NONE);
 		textGroup.addModifyListener(new TextModifyListener());
+
+		groupListener = new ChangeNodeListener() {
+
+			@Override
+			public void stateChanged(ChangeNodeEvent e) {
+
+				switch (e.getAction()) {
+				case UPDATE_NODE:
+					if (e.getNewNode() instanceof GroupNode) {
+						if (selectedNode.getPath()
+								.substring(0, e.getOldNode().getParent().getPath().length())
+								.equals(e.getOldNode().getParent().getPath())
+								&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode()).getChildren()) {
+//								{
+							// set input, set group, set title
+							selectedNode.setParent((GroupNode) e.getNewNode());
+							
+//							selectedNode.getChildren().forEach(n -> n.setParent((GroupNode) e.getNewNode()));
+//							selectedNode.setParent(((GroupNode) e.getNewNode().getParent()));
+//							textParentGroup.setText(e.getNewNode().getName());
+							System.err.println(e.getNewNode().getName());
+//							selectedNode.setParent((GroupNode) e.getNewNode());
+							setInput(new NodeEditorInput(selectedNode.getPath()));
+							textParentGroup.setText(e.getNewNode().getName());
+						}
+					}
+					System.err.println("Group success updated");
+					break;
+				case REMOVE_NODE:
+					System.err.println("Group success deleted");
+					break;
+				case ADD_NODE:
+					System.err.println("Group success added");
+					break;
+				default:
+					System.err.println("++");
+					System.err.println("dddd");
+					System.err.println("++");
+					break;
+				}
+			}
+		};
+		Controller.getInstance().addListener(groupListener);
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		GroupNode node = new GroupNode(textGroup.getText());
 //		if (!isChildrenOpen(selectedNode.getChildren())) {
+		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
 			Controller.getInstance().save(selectedNode, node);
-			selectedNode = node;
+			if (Controller.getInstance().isNodeExists(node)) {
+				selectedNode = node;
 			NodeEditorInput input = (NodeEditorInput) getEditorInput();
 			input.setName(selectedNode.getPath());
 //		} else {
 //			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
 //		}
-		setDirty(false);
+			setDirty(false);
+		}
+	}
+
 	}
 
 	private boolean isChildrenOpen(List<INode> nodes) {
@@ -96,7 +153,7 @@ public class GroupEditor extends AbstractEditorPart {
 	}
 
 	public void addSelectedNode(INode node) {
-		selectedNode = (GroupNode)node;
+		selectedNode = (GroupNode) node;
 	}
 
 	public void deleteGroup() { // delete second param
@@ -112,7 +169,7 @@ public class GroupEditor extends AbstractEditorPart {
 	@Override
 	protected boolean checkModifyFields() {
 		// TODO Auto-generated method stub
-		return false;
+		return !textGroup.getText().equals(selectedNode.getName()) ? true : false;
 	}
 
 }

@@ -60,10 +60,13 @@ public class RemoveNodeAction extends Action implements ISelectionListener, IWor
 //		}
 //		
 		INode node = (INode) selection.getFirstElement();
-		// 
+		//
 		Controller.getInstance().remove(node, node.getParent().getPath());
-		
+
 		page.closeEditor(page.findEditor(new NodeEditorInput(node.getPath())), false);
+		if (node.hasChildren()) {
+			closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
+		}
 	}
 
 	private void closeEditorsOfNodesChildren(IWorkbenchPage page, List<INode> nodes) {

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -75,9 +74,8 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 	private Text textAddress;
 	private Text textCity;
 	private Text textResult;
-//	private Text hidenText;
-
 	private ItemNode selectedNode;
+	private ChangeNodeListener itemListener;
 
 	public ItemEditor() {
 	}
@@ -106,7 +104,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		layout.horizontalSpacing = 15;
 		layout.verticalSpacing = 15;
 		composite.setLayout(layout);
-		
+
 		GridData data = new GridData(GridData.BEGINNING);
 
 		labelName = new Label(composite, SWT.NONE);
@@ -159,29 +157,31 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		textResult.setData(data);
 		textResult.addModifyListener(new TextModifyListener());
 
-		Controller.getInstance().addListener(new ChangeNodeListener() {
+		itemListener = new ChangeNodeListener() {
 
 			public void stateChanged(ChangeNodeEvent event) {
-				// TODO Auto-generated method stub
 				// if((MyEvent)event.getSource()).getAction() == MY_ACTION.ADD ||
 				// MY_ACTION.REMOVE || MY_ACTION.EDIT){
 				switch (event.getAction()) {
 				case UPDATE_NODE:
 					if (event.getNewNode() instanceof GroupNode) {
-					  if(selectedNode.getPath().substring(0, event.getOldNode().getPath().length()).equals(event.getOldNode().getPath())) {
-						  System .err.println("item path: " + selectedNode.getPath());
-						  System.err.println("part of path: " + selectedNode.getPath().substring(0, event.getOldNode().getPath().length()));
-						  System.err.println("old node path: " +  event.getOldNode().getPath());
-						  // set input, set group, set title
-					  }		
-//					 
+						if (selectedNode.getPath().substring(0, event.getOldNode().getParent().getPath().length())
+								.equals(event.getOldNode().getParent().getPath()) 
+								&& selectedNode.getParent().getChildren() == ((GroupNode) event.getNewNode()).getChildren()) {
+							// set input, set group, set title
+							selectedNode.setParent((GroupNode) event.getNewNode());
+							setInput(new NodeEditorInput(selectedNode.getPath()));		
+							textGroup.setText(event.getNewNode().getName());
+//							fillFields();
+						}
 					}
-
-					System.err.println(event.getNewNode().getPath());
+					System.err.println("Item success updated");
 					break;
 				case REMOVE_NODE:
-
-					System.err.println("removed " + event.getNewNode().getName());
+					System.err.println("Item success deleted");
+					break;
+				case ADD_NODE:
+					System.err.println("Item success added");
 					break;
 				default:
 					System.err.println("++");
@@ -196,26 +196,28 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				}
 			}
 
-		});
+		};
+
+		Controller.getInstance().addListener(itemListener);
 		Canvas canvas = new Canvas(sashForm, SWT.NONE);
 		canvas.setLayout(new FillLayout());
-		Button button = new Button(canvas,SWT.PUSH);
+		Button button = new Button(canvas, SWT.PUSH);
 		button.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				 FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+				FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						SWT.OPEN);
 //		            dialog.setFilterNames(FILTER_NAMES);
 //		            dialog.setFilterExtensions(FILTER_EXTS);
-		            String result = dialog.open();
-		            if(result!=null)
-		               {
+				String result = dialog.open();
+				if (result != null) {
 //		                   text.setText(result);
 //		            	ResourceManager resourceManager = new LocalResourceManager(parentRegistry)
 //		                   Image image = ResourceManager.getImage(result);
-		            	ImageDescriptor idesc = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, result);
-		                Image image = idesc.createImage() ;  
-		                button.setImage(image);
+					ImageDescriptor idesc = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, result);
+					Image image = idesc.createImage();
+					button.setImage(image);
 //		            	ImageData imgData = image.getImageData();
 //		                   imgData=imgData.scaledTo(200, 200);
 //
@@ -228,9 +230,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 //		                   //Image size set to Label
 //		                   //lbl_image_text.setBounds(25,88,image.getBounds().width+10,image.getBounds().height+10);
 //		                   lbl_image_text.setImage(SWTResourceManager.getImage(result));
-		               }				
+				}
 			}
-		
+
 		});
 //		button.setImage(image);
 //		Image image = new Image(Display.getCurrent(), "icon/folder.png");
@@ -264,9 +266,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 //
 //	    return image;
 //	}
-	
+
 	public void addSelectedNode(INode item) {
-		this.selectedNode = (ItemNode)item;
+		this.selectedNode = (ItemNode) item;
 	}
 
 	@Override
@@ -340,7 +342,6 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 						"Node already exist with this name");
 			}
-//			}
 		} else {
 			MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 					"Can't save node, because it was deleted");
@@ -360,13 +361,17 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 	}
 
 	@Override
+	public void dispose() {
+		Controller.getInstance().removeListener(itemListener);
+		super.dispose();
+	}
+
+	@Override
 	protected boolean checkModifyFields() {
 		return !textAddress.getText().equals(selectedNode.getAddress())
-				|| !textCity.getText().equals(selectedNode.getCity()) 
+				|| !textCity.getText().equals(selectedNode.getCity())
 				|| !textName.getText().equals(selectedNode.getName())
-				|| !textResult.getText().equals("" +selectedNode.getResult());
+				|| !textResult.getText().equals("" + selectedNode.getResult());
 	}
-	
-
 
 }

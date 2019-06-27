@@ -47,31 +47,26 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 
 	@Override
 	public void run() {
-		NodeEditorInput input = new NodeEditorInput("new Group");
-		openEditor(input, window.getActivePage());
-
-	}
-
-	private void openEditor(NodeEditorInput input, IWorkbenchPage page) {
-		GroupNode parent = getParent();
 		try {
-			page.openEditor(input, GroupEditor.ID);
-			GroupEditor editor = (GroupEditor) page.getActiveEditor();
-//			editor.getHidenText().setText(parent.getPath());
-			editor.addSelectedNode(new GroupNode(parent));
+			openEditor(new NodeEditorInput("new Group"), window.getActivePage());
 		} catch (PartInitException e) {
 			System.err.println("Error NewGroupAction ");
 		}
 	}
 
+	private void openEditor(NodeEditorInput input, IWorkbenchPage page) throws PartInitException {
+		page.openEditor(input, GroupEditor.ID);
+		GroupEditor editor = (GroupEditor) page.getActiveEditor();
+		editor.addSelectedNode(new GroupNode(getParent()));
+		editor.fillFields();
+	}
+
 	private GroupNode getParent() {
-		GroupNode parent = null;
-		if (selection.getFirstElement() == null) {
-			parent = NodeService.getInstance().getRoot();
+		if (selection.getFirstElement() != null) {
+			return (GroupNode) selection.getFirstElement();
 		} else {
-			parent = (GroupNode) selection.getFirstElement();
+			return NodeService.getInstance().getRoot();
 		}
-		return parent;
 	}
 
 	@Override

@@ -1,24 +1,13 @@
 package org.eclipsercp.studentinfo.view;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipsercp.studentinfo.model.RootNode;
-import org.eclipsercp.studentinfo.provider.UsersTreeViewerContentProvider;
-import org.eclipsercp.studentinfo.provider.UsersTreeViewerLabelProvider;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
@@ -29,6 +18,8 @@ import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
+import org.eclipsercp.studentinfo.provider.UsersTreeViewerContentProvider;
+import org.eclipsercp.studentinfo.provider.UsersTreeViewerLabelProvider;
 
 public class UsersView extends ViewPart implements ChangeNodeListener {
 
@@ -88,16 +79,16 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 	}
 
 	private INode[] getRootNode() {
-
+		
 		INodeService service = NodeService.getInstance();
-		GroupNode group = new GroupNode("group 1");
-		GroupNode group2 = new GroupNode("group 1.2");
-		INode item1 = new ItemNode("item1", "", "dsa", 1);
-		INode item2 = new ItemNode("item2", "", "dsa", 1);
-		service.addNode(service.getRoot(), group);
-		service.addNode(group, group2);
-		service.addNode(group2, item1);
-		service.addNode(service.getRoot(), item2);
+//		GroupNode group = new GroupNode("group 1");
+//		GroupNode group2 = new GroupNode("group 1.2");
+//		INode item1 = new ItemNode("item1", "", "dsa", 1);
+//		INode item2 = new ItemNode("item2", "", "dsa", 1);
+//		service.addNode(service.getRoot(), group);
+//		service.addNode(group, group2);
+//		service.addNode(group2, item1);
+//		service.addNode(service.getRoot(), item2);
 		return service.getAllNodes();
 	}
 
