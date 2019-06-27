@@ -165,11 +165,10 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				switch (event.getAction()) {
 				case UPDATE_NODE:
 					if (event.getNewNode() instanceof GroupNode) {
-						if (selectedNode.getPath().substring(0, event.getOldNode().getParent().getPath().length())
-								.equals(event.getOldNode().getParent().getPath()) 
-								&& selectedNode.getParent().getChildren() == ((GroupNode) event.getNewNode()).getChildren()) {
+						if (selectedNode.getParent().getPath().equals(event.getNewNode().getPath())) {
+//								&& selectedNode.getParent().getChildren() == ((GroupNode) event.getNewNode()).getChildren()) {
 							// set input, set group, set title
-							selectedNode.setParent((GroupNode) event.getNewNode());
+							//selectedNode.setParent((GroupNode) event.getNewNode());
 							setInput(new NodeEditorInput(selectedNode.getPath()));		
 							textGroup.setText(event.getNewNode().getName());
 //							fillFields();
