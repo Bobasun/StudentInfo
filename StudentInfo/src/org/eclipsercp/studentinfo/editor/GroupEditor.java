@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.Controller;
@@ -39,8 +40,9 @@ public class GroupEditor extends AbstractEditorPart {
 
 	@Override
 	public void dispose() {
-		Controller.getInstance().removeListener(groupListener);
 		super.dispose();
+		Controller.getInstance().removeListener(groupListener);
+		
 	}
 
 	@Override
@@ -64,49 +66,62 @@ public class GroupEditor extends AbstractEditorPart {
 		textGroup = new Text(composite, SWT.NONE);
 		textGroup.addModifyListener(new TextModifyListener());
 
+		System.err.println("create listener group..");
+		
 		groupListener = new ChangeNodeListener() {
 
 			@Override
 			public void stateChanged(ChangeNodeEvent e) {
 
 				switch (e.getAction()) {
+				case REMOVE_NODE:
+					if (selectedNode.getPath().contains( e.getOldNode().getPath()))
+					//		.equals(e.getOldNode().getPath()))
+					{
+						getSite().getPage().closeEditor(GroupEditor.this, false);
+						System.err.println("Group success deleted");
+					}
+					break;
 				case UPDATE_NODE:
 					if (e.getNewNode() instanceof GroupNode) {
-						if (selectedNode.getPath()
-								.substring(0, e.getOldNode().getParent().getPath().length())
+						if (selectedNode.getPath().substring(0, e.getOldNode().getParent().getPath().length())
 								.equals(e.getOldNode().getParent().getPath())
-								&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode()).getChildren()) {
+								&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode())
+										.getChildren()) {
 //								{
 							// set input, set group, set title
 							selectedNode.setParent((GroupNode) e.getNewNode());
-							
-//							selectedNode.getChildren().forEach(n -> n.setParent((GroupNode) e.getNewNode()));
-//							selectedNode.setParent(((GroupNode) e.getNewNode().getParent()));
-//							textParentGroup.setText(e.getNewNode().getName());
-							System.err.println(e.getNewNode().getName());
-//							selectedNode.setParent((GroupNode) e.getNewNode());
-							setInput(new NodeEditorInput(selectedNode.getPath()));
+//							setInput(new NodeEditorInput(selectedNode.getPath() + ID));
 							textParentGroup.setText(e.getNewNode().getName());
 						}
 					}
 					System.err.println("Group success updated");
 					break;
-				case REMOVE_NODE:
-					System.err.println("Group success deleted");
-					break;
 				case ADD_NODE:
+//					setInput(new NodeEditorInput(selectedNode.getPath() + ID));
 					System.err.println("Group success added");
 					break;
 				default:
-					System.err.println("++");
-					System.err.println("dddd");
-					System.err.println("++");
-					break;
+
 				}
 			}
 		};
 		Controller.getInstance().addListener(groupListener);
 	}
+
+//	private void closeEditorsOfNodesChildren(IWorkbenchPage page, List<INode> nodes) {
+//		
+//		IEditorPart e = null;
+//		for (INode node : nodes) {
+//				e = page.findEditor(new NodeEditorInput(node.getPath()));
+//				if (node.hasChildren()) {
+//					closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
+//				}
+//			if (e != null) {
+//				page.closeEditor(e, false);
+//			}
+//		}
+//	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -116,14 +131,15 @@ public class GroupEditor extends AbstractEditorPart {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
-			NodeEditorInput input = (NodeEditorInput) getEditorInput();
-			input.setName(selectedNode.getPath());
+				NodeEditorInput input = (NodeEditorInput) getEditorInput();
+				input.setName(selectedNode.getPath() + ID);
 //		} else {
 //			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
 //		}
-			setDirty(false);
+				setDirty(false);
+				setPartName(selectedNode.getName());
+			}
 		}
-	}
 
 	}
 
@@ -164,6 +180,7 @@ public class GroupEditor extends AbstractEditorPart {
 	public void fillFields() {
 		textGroup.setText(selectedNode.getName());
 		textParentGroup.setText(selectedNode.getParent().getName());
+		setPartName(selectedNode.getName());
 	}
 
 	@Override

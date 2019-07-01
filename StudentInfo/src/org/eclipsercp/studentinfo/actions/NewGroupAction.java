@@ -39,7 +39,7 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(!(selection.getFirstElement() instanceof ItemNode));
+			setEnabled(selection.getFirstElement() instanceof GroupNode);
 		} else {
 			setEnabled(false);
 		}
@@ -55,7 +55,7 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 	}
 
 	private void openEditor(NodeEditorInput input, IWorkbenchPage page) throws PartInitException {
-		page.openEditor(input, GroupEditor.ID);
+		page.openEditor(input, GroupEditor.ID,false);
 		GroupEditor editor = (GroupEditor) page.getActiveEditor();
 		editor.addSelectedNode(new GroupNode(getParent()));
 		editor.fillFields();

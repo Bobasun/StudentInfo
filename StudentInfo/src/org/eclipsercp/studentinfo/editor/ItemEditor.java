@@ -156,7 +156,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		textResult = new Text(composite, SWT.BORDER);
 		textResult.setData(data);
 		textResult.addModifyListener(new TextModifyListener());
-
+		System.err.println("create listener item..");
 		itemListener = new ChangeNodeListener() {
 
 			public void stateChanged(ChangeNodeEvent event) {
@@ -166,18 +166,19 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 				case UPDATE_NODE:
 					if (event.getNewNode() instanceof GroupNode) {
 						if (selectedNode.getParent().getPath().equals(event.getNewNode().getPath())) {
-//								&& selectedNode.getParent().getChildren() == ((GroupNode) event.getNewNode()).getChildren()) {
 							// set input, set group, set title
-							//selectedNode.setParent((GroupNode) event.getNewNode());
-							setInput(new NodeEditorInput(selectedNode.getPath()));		
 							textGroup.setText(event.getNewNode().getName());
-//							fillFields();
 						}
 					}
 					System.err.println("Item success updated");
 					break;
 				case REMOVE_NODE:
-					System.err.println("Item success deleted");
+					if (selectedNode.getPath().contains( event.getOldNode().getPath()))
+					//		.equals(event.getOldNode().getPath())) 
+					{
+						getSite().getPage().closeEditor(ItemEditor.this, false);
+						System.err.println("Group success deleted");
+					}
 					break;
 				case ADD_NODE:
 					System.err.println("Item success added");
@@ -187,11 +188,6 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 					System.err.println("dddd");
 					System.err.println("++");
 					break;
-				}
-
-				if (!Controller.getInstance().isNodeExists(selectedNode.getParent())) {
-//					System.err.println(event.node.getName());
-					System.err.println(ItemEditor.this.getTitle());
 				}
 			}
 
@@ -321,7 +317,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		getTextGroup().setText(selectedNode.getGroup());
 		getTextCity().setText(selectedNode.getCity());
 		getTextResult().setText("" + selectedNode.getResult());
-
+		setPartName(selectedNode.getName());
 	}
 
 	@Override
@@ -335,8 +331,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
 				NodeEditorInput input = (NodeEditorInput) getEditorInput();
-				input.setName(selectedNode.getPath());
+				input.setName(selectedNode.getPath() + ID);
 				setDirty(false);
+				setPartName(selectedNode.getName());
 			} else {
 				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
 						"Node already exist with this name");
@@ -361,8 +358,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 
 	@Override
 	public void dispose() {
-		Controller.getInstance().removeListener(itemListener);
 		super.dispose();
+		System.err.println("remove Listener item" + selectedNode);
+		Controller.getInstance().removeListener(itemListener);
 	}
 
 	@Override

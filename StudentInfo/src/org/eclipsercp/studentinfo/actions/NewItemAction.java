@@ -2,7 +2,9 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -32,6 +34,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		setToolTipText("New Item");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.NEW_ITEM));
 		window.getSelectionService().addSelectionListener(this);
+		
 	}
 
 	@Override
@@ -51,7 +54,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		IWorkbenchPage page = window.getActivePage();
 		NodeEditorInput input = new NodeEditorInput("");
 		try {
-			page.openEditor(input, ItemEditor.ID);
+			page.openEditor(input, ItemEditor.ID,false);
 			ItemEditor editor = (ItemEditor) page.getActiveEditor();
 			editor.addSelectedNode(new ItemNode(parent));
 			editor.fillFields();
@@ -63,7 +66,8 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
-
+			
+		this.selection = (IStructuredSelection) incoming;
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
 			setEnabled(!(selection.getFirstElement() instanceof ItemNode));

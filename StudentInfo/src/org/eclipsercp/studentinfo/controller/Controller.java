@@ -1,6 +1,7 @@
 package org.eclipsercp.studentinfo.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.ChangeEvent;
@@ -30,8 +31,8 @@ public class Controller {
 	}
 
 	public void remove(INode node, String parentName) {
-		GroupNode parent = (GroupNode) service.find(parentName);
-		service.removeNode(parent, node);
+//		GroupNode parent = (GroupNode) service.find(parentName);
+		service.removeNode(node.getParent(), node);
 		notifyAllListeners(createNodeEvent(EnumAction.REMOVE_NODE, node, null));
 	}
 
@@ -40,11 +41,23 @@ public class Controller {
 	}
 
 	private void notifyAllListeners(ChangeNodeEvent event) {
-		listListeners.forEach(listener -> listener.stateChanged(event));
+		new ArrayList<>(listListeners).forEach(l->l.stateChanged(event));
+//		Iterator<ChangeNodeListener> iterator = listListeners.iterator();
+//		while (iterator.hasNext()) {
+//			iterator.next().stateChanged(event);
+//		}
 	}
 
 	public void removeListener(ChangeNodeListener lis) {
-		listListeners.remove(lis);
+		Iterator<ChangeNodeListener> iterator = listListeners.iterator();
+		while (iterator.hasNext()) {
+			ChangeNodeListener temp = iterator.next();
+			if(temp.equals(lis)) {
+				iterator.remove();
+				break;
+			}
+			
+		}
 	}
 
 	public INode getNode(String path, INode node) {
@@ -56,7 +69,7 @@ public class Controller {
 
 	public void save(INode selectedNode, INode newNode) {
 		EnumAction action;
-		GroupNode parentNode = (GroupNode) service.find(selectedNode.getParent().getPath());
+		GroupNode parentNode = (GroupNode) service.find(selectedNode.getParent().getPath(), GroupNode.class);
 		if (parentNode.getChildren().contains((INode) selectedNode)) {
 			service.updateNode(selectedNode, newNode);
 			action = EnumAction.UPDATE_NODE;
@@ -80,7 +93,7 @@ public class Controller {
 	}
 
 	public boolean isNodeExists(INode node) {
-		return service.find(node.getPath()) != null ? true : false;
+		return service.find(node.getPath(),node.getClass()) != null ? true : false;
 	}
 }
 

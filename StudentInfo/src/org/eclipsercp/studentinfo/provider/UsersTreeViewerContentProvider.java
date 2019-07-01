@@ -1,10 +1,8 @@
 package org.eclipsercp.studentinfo.provider;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipsercp.studentinfo.model.RootNode;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
-import org.eclipsercp.studentinfo.model.ItemNode;
 
 public class UsersTreeViewerContentProvider implements ITreeContentProvider {
 
@@ -31,5 +29,5 @@ public class UsersTreeViewerContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		return ((INode) element).hasChildren();
 	}
-
+	
 }

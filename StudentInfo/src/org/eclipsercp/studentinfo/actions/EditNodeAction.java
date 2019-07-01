@@ -2,7 +2,9 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IReusableEditor;
@@ -49,21 +51,24 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 		IWorkbenchPage page = window.getActivePage();
 		AbstractEditorPart editor = null;
 		INode item = (INode) selection.getFirstElement();
-		NodeEditorInput input = new NodeEditorInput(item.getPath());
+		
+		String editorId;
 		try {
 			if (selection.getFirstElement() instanceof ItemNode) {
-				page.openEditor(input, ItemEditor.ID);
+				editorId =  ItemEditor.ID;
 			} else if (selection.getFirstElement() instanceof GroupNode) {
-				page.openEditor(input, GroupEditor.ID);
-			}else {
+				editorId =   GroupEditor.ID;
+			} else {
 				return;
 			}
-			editor = (AbstractEditorPart) page.getActiveEditor();
+			NodeEditorInput input = new NodeEditorInput(item.getPath() + editorId);
+			editor = (AbstractEditorPart) page.openEditor(input, editorId);
+			editor.setFocus();
 			editor.addSelectedNode(item);
 			editor.fillFields();
 		} catch (PartInitException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	@Override

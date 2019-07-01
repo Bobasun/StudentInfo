@@ -14,7 +14,7 @@ import org.eclipsercp.studentinfo.editor.ItemEditor;
 public class SaveNodeAction extends Action implements IWorkbenchAction {
 
 	private final IWorkbenchWindow window;
-	public final static String ID = "org.eclipsercp.studentinfo.saveitem";
+	public final static String ID = "org.eclipsercp.studentinfo.savenode";
 
 	public SaveNodeAction(IWorkbenchWindow window) {
 		this.window = window;

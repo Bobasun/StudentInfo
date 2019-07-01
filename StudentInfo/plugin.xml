@@ -33,14 +33,12 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipsercp.studentinfo.editor.ItemEditor"
-            default="true"
             icon="icons/text_align_justify.png"
             id="StudentInfo.editor"
-            name="Item Editords">
+            name="Item Editor">
       </editor>
       <editor
             class="org.eclipsercp.studentinfo.editor.GroupEditor"
-            default="false"
             id="StudentInfo.groupEditor"
             name="Group Editor">
       </editor>

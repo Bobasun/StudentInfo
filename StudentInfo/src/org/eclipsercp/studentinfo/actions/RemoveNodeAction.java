@@ -44,54 +44,29 @@ public class RemoveNodeAction extends Action implements ISelectionListener, IWor
 
 	@Override
 	public void run() {
-		IWorkbenchPage page = window.getActivePage();
-//
-//		if (selection.getFirstElement() instanceof ItemNode) {
-//			ItemNode item = (ItemNode) selection.getFirstElement();
-//			Controller.getInstance().remove(item, item.getParent().getPath());
-//			page.closeEditor(page.findEditor(new NodeEditorInput(item.getPath())), false);
-//		} else if (selection.getFirstElement() instanceof GroupNode) {
-//			GroupNode group = (GroupNode) selection.getFirstElement();
-//			// 
-//			Controller.getInstance().remove(group, group.getParent().getPath());
-//			
-//			page.closeEditor(page.findEditor(new GroupEditorInput(group.getPath())), false);
-//			closeEditorsOfNodesChildren(page, group.getChildren());
-//		}
-//		
+		IWorkbenchPage page = window.getActivePage();	
 		INode node = (INode) selection.getFirstElement();
-		//
+//		page.closeEditor(page.findEditor(new NodeEditorInput(node.getPath())), true);
+//		closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
 		Controller.getInstance().remove(node, node.getParent().getPath());
-
-		page.closeEditor(page.findEditor(new NodeEditorInput(node.getPath())), false);
-		if (node.hasChildren()) {
-			closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
-		}
 	}
 
-	private void closeEditorsOfNodesChildren(IWorkbenchPage page, List<INode> nodes) {
-		IEditorPart e = null;
-		for (INode node : nodes) {
-			if (node instanceof GroupNode) {
-				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new NodeEditorInput(node.getPath()));
-				if (node.hasChildren()) {
-					closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
-				}
-			} else if (node instanceof ItemNode) {
-				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new NodeEditorInput(node.getPath()));
-			}
-			if (e != null) {
-				page.closeEditor(e, false);
-			}
-		}
-
-	}
+//	private void closeEditorsOfNodesChildren(IWorkbenchPage page, List<INode> nodes) {
+//		IEditorPart e = null;
+//		for (INode node : nodes) {
+//				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+//						.findEditor(new NodeEditorInput(node.getPath()));
+//				if (node.hasChildren()) {
+//					closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
+//				}
+//			if (e != null) {
+//				page.closeEditor(e, true);
+//			}
+//		}
+//	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -1,5 +1,6 @@
 package org.eclipsercp.studentinfo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,42 +71,55 @@ public class NodeService implements INodeService {
 
 	@Override
 	public INode find(String path) {
+			return find (path, INode.class);
+	}
+	
+	@Override
+	public INode find(String path, Class<? extends INode> class_) {
 
 		String[] groups = path.substring(1, path.length()).split("/");
 		if (root.getName().equals(groups[0])) {
-			return find(groups, root.getChildren());
+			return find(groups, root.getChildren(), class_);
 		} else {
 			return null;
 		}
-
 	}
 
-	private INode find(String[] groups, List<INode> children) {
-
-		INode localNode = root;
-		for (int i = 1; i < groups.length; i++) {
-			localNode = find(groups[i], children);
-			if (localNode != null) {
-				if (localNode.hasChildren()) {
-					children = ((GroupNode) localNode).getChildren();
+	private INode find(String[] groups, List<INode> children, Class<? extends INode> class_) {
+       INode localNode = root;
+       for (int i = 1; i < groups.length; i++) {
+			List<INode> localNodes = find(groups[i], children, class_);
+			for(INode node: localNodes) {
+				if(i==groups.length-1 && class_.isAssignableFrom(node.getClass())) {
+					return node;
 				}
-			} else {
-				return null;
+				if (node.hasChildren()) {
+					children = ((GroupNode) node).getChildren();
+					
+				}
 			}
+			
+//			if (localNode != null) {
+//				if (localNode.hasChildren()) {
+//					children = ((GroupNode) localNode).getChildren();
+//				}
+//			} else {
+//				return null;
+//			}
 		}
 		return localNode;
-
 	}
 
-	private INode find(String name, List<INode> nodes) {
-		INode local = null;
+	private List<INode> find(String name, List<INode> nodes, Class<? extends INode> class_) {
+		
+		List<INode> list = new ArrayList<>();
 		for (INode node : nodes) {
 			if (node.getName().equals(name)) {
-				local = node;
-				break;
+				list.add(node);
+				
 			}
 		}
-		return local;
+		return list;
 
 	}
 

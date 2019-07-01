@@ -12,6 +12,7 @@ public interface INodeService {
 	GroupNode getRoot();
 	INode[] getAllNodes();
 
+	INode find(String path, Class<? extends INode> class_);
 	INode find(String path);
 	void removeNode(GroupNode parent,INode node);
 	
