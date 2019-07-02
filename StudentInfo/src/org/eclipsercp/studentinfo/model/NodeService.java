@@ -18,7 +18,6 @@ public class NodeService implements INodeService {
 
 	private NodeService(GroupNode root) {
 		this.root = root;
-
 	}
 
 	@Override
@@ -95,17 +94,8 @@ public class NodeService implements INodeService {
 				}
 				if (node.hasChildren()) {
 					children = ((GroupNode) node).getChildren();
-					
 				}
 			}
-			
-//			if (localNode != null) {
-//				if (localNode.hasChildren()) {
-//					children = ((GroupNode) localNode).getChildren();
-//				}
-//			} else {
-//				return null;
-//			}
 		}
 		return localNode;
 	}
@@ -115,17 +105,11 @@ public class NodeService implements INodeService {
 		List<INode> list = new ArrayList<>();
 		for (INode node : nodes) {
 			if (node.getName().equals(name)) {
-				list.add(node);
-				
+				list.add(node);	
 			}
 		}
 		return list;
 
 	}
-
-//	@Override
-//	public void updateNode(INode selectedNode, String name) {
-//		selectedNode.setName(name);
-//	}
 
 }

@@ -8,6 +8,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.ImageKeys;
+import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
 
@@ -27,15 +28,8 @@ public class SaveNodeAction extends Action implements IWorkbenchAction {
 
 	@Override
 	public void run() {
-		IWorkbenchPage page = window.getActivePage();
-		if(page.getActiveEditor() instanceof ItemEditor) {
-			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-			editor.doSave(new NullProgressMonitor());
-			
-		} else if(page.getActiveEditor() instanceof GroupEditor) {
-			GroupEditor editor = (GroupEditor) page.getActiveEditor();
-			editor.doSave(new NullProgressMonitor());
-		}
+		AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage().getActiveEditor();
+		editor.doSave(new NullProgressMonitor());
 
 	}
 

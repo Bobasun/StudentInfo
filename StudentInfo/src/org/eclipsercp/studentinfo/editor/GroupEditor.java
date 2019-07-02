@@ -28,9 +28,7 @@ public class GroupEditor extends AbstractEditorPart {
 
 	public final static String ID = "StudentInfo.groupEditor";
 	private Text textParentGroup;
-	private Label labelParentGroup;
 	private Text textGroup;
-	private Label labelGroup;
 	private GroupNode selectedNode;
 	private ChangeNodeListener groupListener;
 
@@ -42,42 +40,27 @@ public class GroupEditor extends AbstractEditorPart {
 	public void dispose() {
 		super.dispose();
 		Controller.getInstance().removeListener(groupListener);
-		
+
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginTop = 15;
-		layout.marginLeft = 30;
-		composite.setLayout(layout);
+		compositeSetting(composite);
+		createInputItems(composite);
+		addNodeListener();
 
-		labelParentGroup = new Label(composite, SWT.NONE);
-		labelParentGroup.setText("Parent Group");
+	}
 
-		textParentGroup = new Text(composite, SWT.NONE);
-		textParentGroup.setEnabled(false);
-
-		labelGroup = new Label(composite, SWT.NONE);
-		labelGroup.setText("Group");
-
-		textGroup = new Text(composite, SWT.NONE);
-		textGroup.addModifyListener(new TextModifyListener());
-
+	private void addNodeListener() {
 		System.err.println("create listener group..");
-		
 		groupListener = new ChangeNodeListener() {
 
 			@Override
 			public void stateChanged(ChangeNodeEvent e) {
-
 				switch (e.getAction()) {
 				case REMOVE_NODE:
-					if (selectedNode.getPath().contains( e.getOldNode().getPath()))
-					//		.equals(e.getOldNode().getPath()))
-					{
+					if (selectedNode.getPath().contains(e.getOldNode().getPath())) {
 						getSite().getPage().closeEditor(GroupEditor.this, false);
 						System.err.println("Group success deleted");
 					}
@@ -88,80 +71,63 @@ public class GroupEditor extends AbstractEditorPart {
 								.equals(e.getOldNode().getParent().getPath())
 								&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode())
 										.getChildren()) {
-//								{
-							// set input, set group, set title
 							selectedNode.setParent((GroupNode) e.getNewNode());
-//							setInput(new NodeEditorInput(selectedNode.getPath() + ID));
 							textParentGroup.setText(e.getNewNode().getName());
 						}
 					}
 					System.err.println("Group success updated");
 					break;
 				case ADD_NODE:
-//					setInput(new NodeEditorInput(selectedNode.getPath() + ID));
 					System.err.println("Group success added");
 					break;
 				default:
-
 				}
 			}
 		};
 		Controller.getInstance().addListener(groupListener);
 	}
 
-//	private void closeEditorsOfNodesChildren(IWorkbenchPage page, List<INode> nodes) {
-//		
-//		IEditorPart e = null;
-//		for (INode node : nodes) {
-//				e = page.findEditor(new NodeEditorInput(node.getPath()));
-//				if (node.hasChildren()) {
-//					closeEditorsOfNodesChildren(page, ((GroupNode) node).getChildren());
-//				}
-//			if (e != null) {
-//				page.closeEditor(e, false);
-//			}
-//		}
-//	}
+	private void createInputItems(Composite composite) {
+		createParentGroupRow(composite);
+		createInputGroupRow(composite);
+	}
+
+	private void createParentGroupRow(Composite composite) {
+		Label labelParentGroup = new Label(composite, SWT.NONE);
+		labelParentGroup.setText("Parent Group");
+		textParentGroup = new Text(composite, SWT.NONE);
+		textParentGroup.setEnabled(false);
+	}
+
+	private void createInputGroupRow(Composite composite) {
+		Label labelGroup = new Label(composite, SWT.NONE);
+		labelGroup.setText("Group");
+		textGroup = new Text(composite, SWT.NONE);
+		textGroup.addModifyListener(new TextModifyListener());
+	}
+
+	private void compositeSetting(Composite composite) {
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginTop = 15;
+		layout.marginLeft = 30;
+		composite.setLayout(layout);
+	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		GroupNode node = new GroupNode(textGroup.getText());
-//		if (!isChildrenOpen(selectedNode.getChildren())) {
+
 		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
 				NodeEditorInput input = (NodeEditorInput) getEditorInput();
 				input.setName(selectedNode.getPath() + ID);
-//		} else {
-//			MessageDialog.openError(this.getSite().getShell(), "Error", "Please, close child groups and items!");
-//		}
 				setDirty(false);
 				setPartName(selectedNode.getName());
 			}
 		}
-
-	}
-
-	private boolean isChildrenOpen(List<INode> nodes) {
-		IEditorPart e = null;
-		boolean isOpen = false;
-		for (INode node : nodes) {
-			if (node instanceof GroupNode) {
-				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new NodeEditorInput(node.getPath()));
-				isOpen = (e != null || isChildrenOpen(((GroupNode) node).getChildren())) ? true : false;
-//				isOpen = isChildrenOpen(((GroupNode) node).getChildren());
-			} else if (node instanceof ItemNode) {
-				e = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.findEditor(new NodeEditorInput(node.getPath()));
-				isOpen = e != null ? true : false;
-			}
-			if (isOpen) {
-				break;
-			}
-		}
-		return isOpen;
 	}
 
 	public Text getTextGroup() {
@@ -172,11 +138,6 @@ public class GroupEditor extends AbstractEditorPart {
 		selectedNode = (GroupNode) node;
 	}
 
-	public void deleteGroup() { // delete second param
-		Controller.getInstance().remove(selectedNode, selectedNode.getParent().getPath());
-
-	}
-
 	public void fillFields() {
 		textGroup.setText(selectedNode.getName());
 		textParentGroup.setText(selectedNode.getParent().getName());
@@ -185,7 +146,6 @@ public class GroupEditor extends AbstractEditorPart {
 
 	@Override
 	protected boolean checkModifyFields() {
-		// TODO Auto-generated method stub
 		return !textGroup.getText().equals(selectedNode.getName()) ? true : false;
 	}
 

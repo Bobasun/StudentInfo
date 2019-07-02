@@ -9,7 +9,6 @@ public abstract class Node implements INode, Cloneable {
 		this.name = name;
 	}
 
-
 	@Override
 	public String getName() {
 		return name;
@@ -23,7 +22,6 @@ public abstract class Node implements INode, Cloneable {
 	@Override
 	public void setParent(GroupNode parent) {
 		this.parent = parent;
-
 	}
 
 	public GroupNode getRoot() {
@@ -44,13 +42,6 @@ public abstract class Node implements INode, Cloneable {
 		} else {
 			return "/" + getName();
 		}
-//		if (parent == null) {
-//			path += this.getName();
-//			return path;
-//		} else {
-//			path+=this.getName() +"/";
-//		return parent.getPathToRoot(path);
-//		}
 	}
 
 	public INode clone() {
@@ -58,7 +49,6 @@ public abstract class Node implements INode, Cloneable {
 		try {
 			node = (INode) super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return node;

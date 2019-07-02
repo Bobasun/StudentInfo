@@ -29,11 +29,8 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 
 	private TreeViewer treeViewer;
 	private Controller controller = Controller.getInstance();
-	// controller instance
-//	ItemEditor itemEd = new ItemEditor();
 
 	public UsersView() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -45,7 +42,12 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		getSite().setSelectionProvider(treeViewer);
 		treeViewer.expandAll();
 		controller.addListener(this);
-		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+		treeViewer.addDoubleClickListener(createDoubleClickListener());
+
+	}
+	
+	private IDoubleClickListener createDoubleClickListener() {
+		return new IDoubleClickListener() {
 
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
@@ -73,9 +75,20 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 					e.printStackTrace();
 				}
 			}
-		});
+		};
 	}
 
+//	private String getEditorId(IStructuredSelection selection) {
+//		if (selection.getFirstElement() instanceof ItemNode) {
+//			return ItemEditor.ID;
+//		}else if(selection.getFirstElement() instanceof RootNode) {
+//			return;
+//		} else if (selection.getFirstElement() instanceof GroupNode) {
+//			return GroupEditor.ID;
+//		}
+//		return null;
+//	}
+	
 	private INode[] getRootNode() {
 		INodeService service = NodeService.getInstance();
 		return service.getAllNodes();

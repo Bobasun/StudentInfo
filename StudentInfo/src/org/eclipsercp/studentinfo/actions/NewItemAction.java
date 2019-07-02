@@ -2,11 +2,8 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -17,7 +14,6 @@ import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
 import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
-import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
 
@@ -34,7 +30,6 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 		setToolTipText("New Item");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.NEW_ITEM));
 		window.getSelectionService().addSelectionListener(this);
-		
 	}
 
 	@Override
@@ -44,33 +39,32 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 
 	@Override
 	public void run() {
-		GroupNode parent = null;
-		if (selection.getFirstElement() == null) {
-			parent = NodeService.getInstance().getRoot();
-		} else {
-			parent = (GroupNode) selection.getFirstElement();
-		}
+		openNewEditor(new NodeEditorInput("new Item"));
+	}
 
-		IWorkbenchPage page = window.getActivePage();
-		NodeEditorInput input = new NodeEditorInput("");
+	private void openNewEditor(NodeEditorInput input) {
 		try {
-			page.openEditor(input, ItemEditor.ID,false);
-			ItemEditor editor = (ItemEditor) page.getActiveEditor();
-			editor.addSelectedNode(new ItemNode(parent));
+			ItemEditor editor = (ItemEditor) window.getActivePage().openEditor(input, ItemEditor.ID, false);
+			editor.addSelectedNode(new ItemNode(getParent()));
 			editor.fillFields();
 		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Error NewItemAction");
+		}
+	}
+
+	private GroupNode getParent() {
+		if (selection.getFirstElement() != null) {
+			return (GroupNode) selection.getFirstElement();
+		} else {
+			return NodeService.getInstance().getRoot();
 		}
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
-			
-		this.selection = (IStructuredSelection) incoming;
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(!(selection.getFirstElement() instanceof ItemNode));
+			setEnabled(selection.getFirstElement() instanceof GroupNode);
 		} else {
 			setEnabled(false);
 		}

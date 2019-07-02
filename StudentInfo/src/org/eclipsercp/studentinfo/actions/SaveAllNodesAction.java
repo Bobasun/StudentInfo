@@ -18,8 +18,7 @@ public class SaveAllNodesAction extends Action implements IWorkbenchAction{
 	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	
 	}
 	
 	public SaveAllNodesAction(IWorkbenchWindow window) {
@@ -35,7 +34,6 @@ public class SaveAllNodesAction extends Action implements IWorkbenchAction{
 	public void run() {
 		IWorkbenchPage page = window.getActivePage();
 		for (IEditorReference ref : page.getEditorReferences()) {
-			System.err.println(ref.isDirty());
 			if(ref.isDirty()) {
 				AbstractEditorPart editor = (AbstractEditorPart) ref.getEditor(false);
 				editor.doSave(new NullProgressMonitor());

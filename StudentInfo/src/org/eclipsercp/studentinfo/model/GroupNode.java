@@ -6,15 +6,10 @@ import java.util.List;
 public class GroupNode extends Node {
 
 	protected List<INode> nodes;
-//	public GroupNode(INode parent, String name) {
-//		super(parent,name);
-//		nodes = new ArrayList<>();
-//	}
 
 	public GroupNode(String name) {
 		super(name);
 		nodes = new ArrayList<>();
-		// TODO Auto-generated constructor stub
 	}
 
 	public GroupNode(GroupNode parent) {
@@ -38,7 +33,6 @@ public class GroupNode extends Node {
 	}
 
 	public void addChildren(List<INode> children) {
-		// TODO Auto-generated method stub
 		nodes = children;
 	}
 

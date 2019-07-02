@@ -30,8 +30,7 @@ public class Controller {
 		return instance;
 	}
 
-	public void remove(INode node, String parentName) {
-//		GroupNode parent = (GroupNode) service.find(parentName);
+	public void remove(INode node) {
 		service.removeNode(node.getParent(), node);
 		notifyAllListeners(createNodeEvent(EnumAction.REMOVE_NODE, node, null));
 	}
@@ -42,10 +41,6 @@ public class Controller {
 
 	private void notifyAllListeners(ChangeNodeEvent event) {
 		new ArrayList<>(listListeners).forEach(l->l.stateChanged(event));
-//		Iterator<ChangeNodeListener> iterator = listListeners.iterator();
-//		while (iterator.hasNext()) {
-//			iterator.next().stateChanged(event);
-//		}
 	}
 
 	public void removeListener(ChangeNodeListener lis) {

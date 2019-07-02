@@ -13,9 +13,9 @@ public class UsersTreeViewerContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if(parentElement instanceof GroupNode) {
-		return ((GroupNode) parentElement).getChildren().toArray();
-		}else {
+		if (parentElement instanceof GroupNode) {
+			return ((GroupNode) parentElement).getChildren().toArray();
+		} else {
 			return null;
 		}
 	}
@@ -29,5 +29,5 @@ public class UsersTreeViewerContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		return ((INode) element).hasChildren();
 	}
-	
+
 }

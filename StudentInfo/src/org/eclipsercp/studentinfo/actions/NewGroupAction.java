@@ -36,29 +36,23 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 	}
 
 	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
-		if (incoming instanceof IStructuredSelection) {
-			this.selection = (IStructuredSelection) incoming;
-			setEnabled(selection.getFirstElement() instanceof GroupNode);
-		} else {
-			setEnabled(false);
-		}
+	public void dispose() {
+		window.getSelectionService().removeSelectionListener(this);
 	}
 
 	@Override
 	public void run() {
+		openNewEditor(new NodeEditorInput("new Group"));
+	}
+
+	private void openNewEditor(NodeEditorInput input) {
 		try {
-			openEditor(new NodeEditorInput("new Group"), window.getActivePage());
+			GroupEditor editor = (GroupEditor) window.getActivePage().openEditor(input, GroupEditor.ID, false);
+			editor.addSelectedNode(new GroupNode(getParent()));
+			editor.fillFields();
 		} catch (PartInitException e) {
 			System.err.println("Error NewGroupAction ");
 		}
-	}
-
-	private void openEditor(NodeEditorInput input, IWorkbenchPage page) throws PartInitException {
-		page.openEditor(input, GroupEditor.ID,false);
-		GroupEditor editor = (GroupEditor) page.getActiveEditor();
-		editor.addSelectedNode(new GroupNode(getParent()));
-		editor.fillFields();
 	}
 
 	private GroupNode getParent() {
@@ -70,8 +64,12 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 	}
 
 	@Override
-	public void dispose() {
-		window.getSelectionService().removeSelectionListener(this);
+	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
+		if (incoming instanceof IStructuredSelection) {
+			this.selection = (IStructuredSelection) incoming;
+			setEnabled(selection.getFirstElement() instanceof GroupNode);
+		} else {
+			setEnabled(false);
+		}
 	}
-
 }

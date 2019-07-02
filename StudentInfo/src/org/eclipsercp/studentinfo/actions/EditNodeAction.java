@@ -48,21 +48,14 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 	}
 
 	public void run() {
-		IWorkbenchPage page = window.getActivePage();
-		AbstractEditorPart editor = null;
 		INode item = (INode) selection.getFirstElement();
-		
-		String editorId;
+		String editorId = getEditorId();
+		editNodeEditor(new NodeEditorInput(item.getPath() + editorId), editorId, item);
+	}
+
+	private void editNodeEditor(NodeEditorInput input, String editorId, INode item) {
 		try {
-			if (selection.getFirstElement() instanceof ItemNode) {
-				editorId =  ItemEditor.ID;
-			} else if (selection.getFirstElement() instanceof GroupNode) {
-				editorId =   GroupEditor.ID;
-			} else {
-				return;
-			}
-			NodeEditorInput input = new NodeEditorInput(item.getPath() + editorId);
-			editor = (AbstractEditorPart) page.openEditor(input, editorId);
+			AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage().openEditor(input, editorId);
 			editor.setFocus();
 			editor.addSelectedNode(item);
 			editor.fillFields();
@@ -71,12 +64,21 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 		}
 	}
 
+	private String getEditorId() {
+		if (selection.getFirstElement() instanceof ItemNode) {
+			return ItemEditor.ID;
+		} else if (selection.getFirstElement() instanceof GroupNode) {
+			return GroupEditor.ID;
+		}
+		return null;
+	}
+
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(
-					selection.getFirstElement() instanceof INode && !(selection.getFirstElement() instanceof RootNode));
+			setEnabled(selection.getFirstElement() instanceof INode 
+					&& !(selection.getFirstElement() instanceof RootNode));
 		} else {
 			setEnabled(false);
 		}
