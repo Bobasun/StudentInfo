@@ -33,13 +33,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		super.makeActions(window);
 		editUser = new EditNodeAction(window);
 		register(editUser);
-		newItem = new NewItemAction(window);
+		newItem = new NewItemAction(window,NewItemAction.ID_ITEM);
 		register(newItem);
 		saveNode = new SaveNodeAction(window);
 		register(saveNode);
 		saveAllNodes = new SaveAllNodesAction(window);
 		register(saveAllNodes);
-		newGroup = new NewGroupAction(window);
+//		newGroup = new NewGroupAction(window);//
+		newGroup = new NewItemAction(window, NewItemAction.ID_GROUP);
 		register(newGroup);
 		removeAction = new RemoveNodeAction(window);
 		register(removeAction);

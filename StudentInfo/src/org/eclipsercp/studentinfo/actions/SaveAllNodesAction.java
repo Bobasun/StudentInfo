@@ -8,8 +8,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
-import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class SaveAllNodesAction extends Action implements IWorkbenchAction{
 	
@@ -27,7 +27,7 @@ public class SaveAllNodesAction extends Action implements IWorkbenchAction{
 		setText("Save All");
 		setToolTipText("Save All");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				Application.PLUGIN_ID, ImageKeys.SAVE_ALL));
+				Application.PLUGIN_ID, UtilsWithConstants.SAVE_ALL));
 	}
 
 	@Override

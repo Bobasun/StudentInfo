@@ -1,6 +1,8 @@
 package org.eclipsercp.studentinfo.model;
 
-public abstract class Node implements INode, Cloneable {
+import java.io.Serializable;
+
+public abstract class Node implements INode, Cloneable, Serializable {
 
 	protected GroupNode parent;
 	protected String name;

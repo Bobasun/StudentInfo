@@ -26,13 +26,13 @@ import org.eclipse.ui.IWorkbenchPartConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
-import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
+import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
-import org.eclipsercp.studentinfo.view.ChangeNodeListener;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 
@@ -229,9 +229,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		getTextResult().setText("" + selectedNode.getResult());
 		setPartName(selectedNode.getName());
 		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID,
-				ImageKeys.NEW_ITEM);
+				UtilsWithConstants.NEW_ITEM);
 		imagePath = selectedNode.getImagePath();
-		if (imagePath != "") {
+		if (!imagePath.equals("")) {
 			try {
 				descriptor = ImageDescriptor.createFromURL(Paths.get(imagePath).toUri().toURL());
 			} catch (MalformedURLException e) {

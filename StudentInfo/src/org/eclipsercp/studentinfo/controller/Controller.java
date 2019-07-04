@@ -12,7 +12,6 @@ import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
-import org.eclipsercp.studentinfo.view.ChangeNodeListener;
 
 public class Controller {
 

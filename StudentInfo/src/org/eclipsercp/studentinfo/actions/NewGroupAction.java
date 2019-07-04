@@ -12,13 +12,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
-import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
 import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class NewGroupAction extends Action implements IWorkbenchAction, ISelectionListener {
 
@@ -31,7 +31,7 @@ public class NewGroupAction extends Action implements IWorkbenchAction, ISelecti
 		setId(ID);
 		setText("New Group");
 		setToolTipText("New Group");
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.NEW_FOLDER));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.NEW_FOLDER));
 		window.getSelectionService().addSelectionListener(this);
 	}
 

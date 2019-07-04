@@ -17,7 +17,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
-import org.eclipsercp.studentinfo.ImageKeys;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
 import org.eclipsercp.studentinfo.editor.ItemEditor;
@@ -26,6 +25,7 @@ import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.RootNode;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class EditNodeAction extends Action implements ISelectionListener, ActionFactory.IWorkbenchAction {
 
@@ -38,7 +38,7 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 		setId(ID);
 		setText("Open");
 		setToolTipText("Open");
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.OPEN));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPEN));
 		window.getSelectionService().addSelectionListener(this);
 	}
 

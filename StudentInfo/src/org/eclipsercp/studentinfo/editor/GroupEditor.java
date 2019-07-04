@@ -17,12 +17,12 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
+import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
-import org.eclipsercp.studentinfo.view.ChangeNodeListener;
 
 public class GroupEditor extends AbstractEditorPart {
 
