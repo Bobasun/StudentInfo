@@ -16,7 +16,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipsercp.studentinfo.Perspective"
-            name="RCP Perspective"
+            name="StudentInfo.perspective"
             id="StudentInfo.perspective">
       </perspective>
    </extension>

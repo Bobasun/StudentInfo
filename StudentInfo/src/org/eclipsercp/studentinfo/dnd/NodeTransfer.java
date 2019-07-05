@@ -14,6 +14,7 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.internal.ole.win32.COM;
 import org.eclipse.swt.internal.ole.win32.FORMATETC;
 import org.eclipsercp.studentinfo.model.INode;
+import org.eclipsercp.studentinfo.model.RootNode;
 
 public class NodeTransfer extends ByteArrayTransfer {
 
@@ -46,12 +47,7 @@ public class NodeTransfer extends ByteArrayTransfer {
 
 	@Override
 	public boolean isSupportedType(TransferData transferData) {
-		int[] types = getTypeIds();
-		FORMATETC format = transferData.formatetc;
-		if (format.cfFormat == types[0] && (format.dwAspect & COM.DVASPECT_CONTENT) == COM.DVASPECT_CONTENT
-				&& (format.tymed & COM.TYMED_HGLOBAL) == COM.TYMED_HGLOBAL)
-			return true;
-		return false;
+		return super.isSupportedType(transferData);
 	}
 
 	@Override
@@ -111,4 +107,13 @@ public class NodeTransfer extends ByteArrayTransfer {
 		}
 		return (INode) object;
 	}
+
+	@Override
+	protected boolean validate(Object object) {
+		System.err.println("valis");
+		return !(object instanceof RootNode); 
+		
+	}
+	
+	
 }

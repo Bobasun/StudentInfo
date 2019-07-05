@@ -47,7 +47,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 
 	@Override
 	public void run() {
-		openNewEditor(new NodeEditorInput("new"));
+		openNewEditor(new NodeEditorInput(id));
 	}
 
 	private void openNewEditor(NodeEditorInput input) {

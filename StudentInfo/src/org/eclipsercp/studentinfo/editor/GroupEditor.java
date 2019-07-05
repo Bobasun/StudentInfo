@@ -29,65 +29,50 @@ public class GroupEditor extends AbstractEditorPart {
 	public final static String ID = "StudentInfo.groupEditor";
 	private Text textParentGroup;
 	private Text textGroup;
-	private GroupNode selectedNode;
-	private ChangeNodeListener groupListener;
-
+	
 	public GroupEditor() {
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		Controller.getInstance().removeListener(groupListener);
-
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		compositeSetting(composite);
-		createInputItems(composite);
-		addNodeListener();
+		createEditorContext(parent);
 
 	}
 
-	private void addNodeListener() {
-		System.err.println("create listener group..");
-		groupListener = new ChangeNodeListener() {
+	protected void addNodeListener() {
+		listener = new ChangeNodeListener() {
 
 			@Override
-			public void stateChanged(ChangeNodeEvent e) {
-				switch (e.getAction()) {
+			public void stateChanged(ChangeNodeEvent event) {
+				switch (event.getAction()) {
 				case REMOVE_NODE:
-					if (selectedNode.getPath().contains(e.getOldNode().getPath())) {
+					if (selectedNode.getPath().contains(event.getOldNode().getPath())) {
 						getSite().getPage().closeEditor(GroupEditor.this, false);
-						System.err.println("Group success deleted");
 					}
 					break;
 				case UPDATE_NODE:
-					if (e.getNewNode() instanceof GroupNode) {
-						if (selectedNode.getPath().substring(0, e.getOldNode().getParent().getPath().length())
-								.equals(e.getOldNode().getParent().getPath())
-								&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode())
-										.getChildren()) {
-							selectedNode.setParent((GroupNode) e.getNewNode());
-							textParentGroup.setText(e.getNewNode().getName());
+					if (event.getNewNode() instanceof GroupNode) {
+						if (getSelectedNode().getParent().getPath().equals(event.getNewNode().getPath())) {
+							textGroup.setText(event.getNewNode().getName());
+//							if (selectedNode.getPath().substring(0, e.getOldNode().getParent().getPath().length())
+//									.equals(e.getOldNode().getParent().getPath())
+//									&& selectedNode.getParent().getChildren() == ((GroupNode) e.getNewNode())
+//											.getChildren()) {
+							selectedNode.setParent((GroupNode) event.getNewNode());
+							textParentGroup.setText(event.getNewNode().getName());
 						}
 					}
-					System.err.println("Group success updated");
 					break;
 				case ADD_NODE:
-					System.err.println("Group success added");
 					break;
 				default:
 				}
 			}
 		};
-		Controller.getInstance().addListener(groupListener);
+		Controller.getInstance().addListener(listener);
 	}
 
-	private void createInputItems(Composite composite) {
+	protected void createItputItems(Composite composite) {
 		createParentGroupRow(composite);
 		createInputGroupRow(composite);
 	}
@@ -106,7 +91,7 @@ public class GroupEditor extends AbstractEditorPart {
 		textGroup.addModifyListener(new TextModifyListener());
 	}
 
-	private void compositeSetting(Composite composite) {
+	protected void compositeSetting(Composite composite) {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginTop = 15;
@@ -117,26 +102,24 @@ public class GroupEditor extends AbstractEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		GroupNode node = new GroupNode(textGroup.getText());
-
-		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
-			Controller.getInstance().save(selectedNode, node);
-			if (Controller.getInstance().isNodeExists(node)) {
-				selectedNode = node;
-				NodeEditorInput input = (NodeEditorInput) getEditorInput();
-				input.setName(selectedNode.getPath() + ID);
-				setDirty(false);
-				setPartName(selectedNode.getName());
-			}
-		}
+		doSave(node);
+//		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
+//			Controller.getInstance().save(selectedNode, node);
+//			if (Controller.getInstance().isNodeExists(node)) {
+//				selectedNode = node;
+//				NodeEditorInput input = (NodeEditorInput) getEditorInput();
+//				input.setName(selectedNode.getPath() + ID);
+//				setDirty(false);
+//				setPartName(selectedNode.getName());
+//			}
+//		}
 	}
-
+	
 	public Text getTextGroup() {
 		return textGroup;
 	}
 
-	public void addSelectedNode(INode node) {
-		selectedNode = (GroupNode) node;
-	}
+	
 
 	public void fillFields() {
 		textGroup.setText(selectedNode.getName());
@@ -148,5 +131,22 @@ public class GroupEditor extends AbstractEditorPart {
 	protected boolean checkModifyFields() {
 		return !textGroup.getText().equals(selectedNode.getName()) ? true : false;
 	}
+
+	@Override
+	protected String getID() {
+		// TODO Auto-generated method stub
+		return ID;
+	}
+
+	@Override
+	protected void setSelectedNode(INode node) {
+		// TODO Auto-generated method stub
+		
+	}
+	private GroupNode getSelectedNode() {
+		return (GroupNode) selectedNode;
+	}
+
+	
 
 }

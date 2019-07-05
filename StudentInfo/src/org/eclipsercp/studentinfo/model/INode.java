@@ -1,6 +1,8 @@
 package org.eclipsercp.studentinfo.model;
 
-public interface INode {
+import java.io.Serializable;
+
+public interface INode extends Serializable{
 
 	String getName();
 

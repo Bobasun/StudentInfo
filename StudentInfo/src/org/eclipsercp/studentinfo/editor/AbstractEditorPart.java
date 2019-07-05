@@ -1,6 +1,7 @@
 package org.eclipsercp.studentinfo.editor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
@@ -9,21 +10,34 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
+import org.eclipsercp.studentinfo.controller.Controller;
+import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 
-public abstract class  AbstractEditorPart extends EditorPart {
-	
+public abstract class AbstractEditorPart extends EditorPart {
+
 	protected boolean dirty;
+	protected ChangeNodeListener listener;
+	protected INode selectedNode;
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		Controller.getInstance().removeListener(listener);
+	}
+
+	public void addSelectedNode(INode node) {
+		selectedNode = node;
+	}
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		
 
 	}
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -39,14 +53,14 @@ public abstract class  AbstractEditorPart extends EditorPart {
 	}
 
 	protected void setDirty(boolean dirty) {
-	       if (this.dirty != dirty) {
-	           this.dirty = dirty;
-	            
-	           // Notify PROP_DIRTY changes to Workbench.
-	           this.firePropertyChange(IEditorPart.PROP_DIRTY);
-	       }
-	   }
-	
+		if (this.dirty != dirty) {
+			this.dirty = dirty;
+
+			// Notify PROP_DIRTY changes to Workbench.
+			this.firePropertyChange(IEditorPart.PROP_DIRTY);
+		}
+	}
+
 	@Override
 	public boolean isSaveAsAllowed() {
 		// TODO Auto-generated method stub
@@ -64,26 +78,48 @@ public abstract class  AbstractEditorPart extends EditorPart {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	class TextModifyListener implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
-			if(checkModifyFields()) {
+			if (checkModifyFields()) {
 				setDirty(true);
-			}else {
+			} else {
 				setDirty(false);
 			}
 		}
 	}
-	
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		super.dispose();
-	}
+
+	protected void doSave(INode node) {
+		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
+			Controller.getInstance().save(selectedNode, node);
+			if (Controller.getInstance().isNodeExists(node)) {
+				selectedNode = node;
+			//	setSelectedNode(node);
+				NodeEditorInput input = (NodeEditorInput) getEditorInput();
+				input.setName(selectedNode.getPath() + getID());
+				setDirty(false);
+				setPartName(selectedNode.getName());
+			}
+		}
+		}
+
+	protected abstract void setSelectedNode(INode node);
+
+	protected abstract String getID();
 
 	protected abstract boolean checkModifyFields();
-	public abstract  void addSelectedNode(INode item);
-    public abstract void fillFields();
+
+	public abstract void fillFields();
+	
+	protected void createEditorContext(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		compositeSetting(composite);
+		createItputItems(composite);
+		addNodeListener();
+	}
+	protected abstract void compositeSetting(Composite composite);
+	protected abstract void createItputItems(Composite composite);
+	protected abstract void addNodeListener();
 
 }

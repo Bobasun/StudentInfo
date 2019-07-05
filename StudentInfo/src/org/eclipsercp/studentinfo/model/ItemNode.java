@@ -1,7 +1,13 @@
 package org.eclipsercp.studentinfo.model;
 
+import java.io.Serializable;
+
 public class ItemNode extends Node {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 788865914361010462L;
 	private String address;
 	private String city;
 	private int result;
@@ -16,7 +22,7 @@ public class ItemNode extends Node {
 	}
 
 	public ItemNode() {
-		super("");
+		super();
 	}
 
 	public ItemNode(GroupNode parent) {
@@ -112,5 +118,5 @@ public class ItemNode extends Node {
 			return false;
 		return true;
 	}
-	
+
 }

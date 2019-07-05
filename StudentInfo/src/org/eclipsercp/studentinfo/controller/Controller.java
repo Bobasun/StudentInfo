@@ -60,6 +60,10 @@ public class Controller {
 		return node;
 
 	}
+	
+	public INode findNode(String path, Class<? extends INode> class_) {
+		return service.find(path,class_);
+	}
 
 	public void save(INode selectedNode, INode newNode) {
 		EnumAction action;

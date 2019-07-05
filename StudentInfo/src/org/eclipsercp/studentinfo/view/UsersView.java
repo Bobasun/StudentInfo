@@ -57,12 +57,10 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		treeViewer.addDoubleClickListener(createDoubleClickListener());
 
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer selectionTransfer = LocalSelectionTransfer.getTransfer();
-		Transfer editorInputTransfer = EditorInputTransfer.getInstance();
-		Transfer transfer = TextTransfer.getInstance();
 		
 		Transfer[] transferTypes = new Transfer[] { NodeTransfer.getInstance() };
 		treeViewer.addDragSupport(operations, transferTypes, new MyDragListener(treeViewer));
+		
 //		 treeViewer.addDropSupport(operations, transferTypes, new MyDropListener(treeViewer,this));
 		
 //		
@@ -166,13 +164,14 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
-				String editorId = "";
 				INode selectedNode = (INode) thisSelection.getFirstElement();
+				if (selectedNode instanceof RootNode) {
+					return;
+				}
+				String editorId = "";
 				if (selectedNode instanceof ItemNode) {
 					editorId = ItemEditor.ID;
-				} else if (selectedNode instanceof RootNode) {
-					return;
-				} else if (selectedNode instanceof GroupNode) {
+				}else if (selectedNode instanceof GroupNode) {
 					editorId = GroupEditor.ID;
 				}
 				String path = selectedNode.getPath() + editorId;

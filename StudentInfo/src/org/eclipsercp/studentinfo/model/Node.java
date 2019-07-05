@@ -4,9 +4,16 @@ import java.io.Serializable;
 
 public abstract class Node implements INode, Cloneable, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3675962890779052672L;
 	protected GroupNode parent;
 	protected String name;
 
+	public Node() {
+	}
+	
 	public Node(String name) {
 		this.name = name;
 	}

@@ -13,6 +13,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.part.EditorInputTransfer;
+import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.dnd.NodeTransfer;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
 import org.eclipsercp.studentinfo.editor.GroupEditor;
@@ -21,6 +22,7 @@ import org.eclipsercp.studentinfo.editor.NodeEditorInput;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.ItemNode;
+import org.eclipsercp.studentinfo.model.RootNode;
 
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
@@ -38,11 +40,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		configurer.setInitialSize(new Point(800, 500));
 		configurer.setShowCoolBar(true);
-		configurer.setShowStatusLine(true);
+		configurer.setShowMenuBar(true);
+		configurer.setShowStatusLine(false);
 		configurer.setShowPerspectiveBar(true);
 		configurer.setTitle("Student Info"); //$NON-NLS-1$
 		configurer.addEditorAreaTransfer(NodeTransfer.getInstance());
-		
+
 		configurer.configureEditorAreaDropListener(new DropTargetListener() {
 
 			@Override
@@ -52,24 +55,29 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				// TODO Auto-generated method stub
 				if (NodeTransfer.getInstance().isSupportedType(event.dataTypes[0])) {
-//					EditorInputTransfer.EditorInputData[] editorInputs = (EditorInputTransfer.EditorInputData []) event.data;
-				INode node = (INode) event.data;
-				String editorId = getEditorId(node);
-					
+					INode node = (INode) event.data;
+					if (node instanceof RootNode) {
+						return;
+					}
+					if (node instanceof ItemNode) {
+						node = Controller.getInstance().findNode(node.getPath(), ItemNode.class);
+					} else {
+						node = Controller.getInstance().findNode(node.getPath(), GroupNode.class);
+					}
+					String editorId = getEditorId(node);
 					try {
-						AbstractEditorPart editor = (AbstractEditorPart) configurer.getWindow().getActivePage().openEditor(new NodeEditorInput(node.getPath() + editorId), editorId);
+						AbstractEditorPart editor = (AbstractEditorPart) configurer.getWindow().getActivePage()
+								.openEditor(new NodeEditorInput(node.getPath() + editorId), editorId);
 						editor.addSelectedNode(node);
 						editor.fillFields();
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
 				}
 			}
-			
+
 			private String getEditorId(INode node) {
 				if (node instanceof ItemNode) {
 					return ItemEditor.ID;
@@ -81,12 +89,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 			@Override
 			public void dragOver(DropTargetEvent event) {
-				
 			}
 
 			@Override
 			public void dragOperationChanged(DropTargetEvent event) {
-				// TODO Auto-generated method stub
+				if ((event.operations == DND.DROP_DEFAULT)) {
+					event.detail = DND.DROP_NONE;
+				}
 			}
 
 			@Override
@@ -96,15 +105,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 			@Override
 			public void dragEnter(DropTargetEvent event) {
-
-				if (event.detail == DND.DROP_DEFAULT) {
-					if ((event.operations & DND.DROP_COPY) != 0) {
-						event.detail = DND.DROP_COPY;
-					} else {
-						event.detail = DND.DROP_NONE;
-					}
-
+				if (!(event.detail == DND.DROP_NONE)) {
+					event.detail = DND.DROP_COPY;
 				}
+
 			}
 		});
 

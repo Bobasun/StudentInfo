@@ -10,8 +10,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TouchEvent;
+import org.eclipse.swt.events.TouchListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -42,9 +46,9 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 	private Text textAddress;
 	private Text textCity;
 	private Text textResult;
-	private ItemNode selectedNode;
-	private ChangeNodeListener itemListener;
-	private String imagePath;
+//	private ItemNode selectedNode;
+//	private ChangeNodeListener itemListener;
+	private String imagePath = "";
 	private Button imageButton;
 
 	public ItemEditor() {
@@ -64,10 +68,8 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 
 		SashForm sashForm = new SashForm(parent, SWT.NONE);
 		sashForm.setLayout(new FillLayout());
-		Composite composite = new Composite(sashForm, SWT.NONE);
-		compositeSetting(composite);
-		createItputItems(composite);
-		addNodeListener();
+//		Composite composite = new Composite(sashForm, SWT.NONE);
+		createEditorContext(sashForm);
 		createImageButton(sashForm);
 
 	}
@@ -98,39 +100,57 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 			}
 
 		});
+		
+		imageButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!imagePath.equals(getSelectedNode().getImagePath())) {
+					setDirty(true);
+				}
+			}
+			
+		});
+		
+		imageButton.addTouchListener(new TouchListener() {
+
+			@Override
+			public void touch(TouchEvent e) {
+				if (!imagePath.equals(getSelectedNode().getImagePath())) {
+					setDirty(true);
+				}
+			}
+		});
+
 	}
 
-	private void addNodeListener() {
-		System.err.println("create listener item..");
-		itemListener = new ChangeNodeListener() {
+	protected void addNodeListener() {
+		listener = new ChangeNodeListener() {
 			public void stateChanged(ChangeNodeEvent event) {
 				switch (event.getAction()) {
 				case UPDATE_NODE:
 					if (event.getNewNode() instanceof GroupNode) {
-						if (selectedNode.getParent().getPath().equals(event.getNewNode().getPath())) {
+						if (getSelectedNode().getParent().getPath().equals(event.getNewNode().getPath())) {
 							textGroup.setText(event.getNewNode().getName());
 						}
 					}
-					System.err.println("Item success updated");
 					break;
 				case REMOVE_NODE:
-					if (selectedNode.getPath().contains(event.getOldNode().getPath())) {
+					if (getSelectedNode().getPath().contains(event.getOldNode().getPath())) {
 						getSite().getPage().closeEditor(ItemEditor.this, false);
-						System.err.println("Group success deleted");
 					}
 					break;
 				case ADD_NODE:
-					System.err.println("Item success added");
 					break;
 				default:
 					break;
 				}
 			}
 		};
-		Controller.getInstance().addListener(itemListener);
+		Controller.getInstance().addListener(listener);
 	}
 
-	private void compositeSetting(Composite composite) {
+	protected void compositeSetting(Composite composite) {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginTop = 15;
@@ -140,7 +160,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		composite.setLayout(layout);
 	}
 
-	private void createItputItems(Composite composite) {
+	protected void createItputItems(Composite composite) {
 		addInputNameRow(composite);
 		addInputGroupRow(composite);
 		addInputAddressRow(composite);
@@ -184,10 +204,7 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		textResult.addModifyListener(new TextModifyListener());
 	}
 
-	public void addSelectedNode(INode item) {
-		this.selectedNode = (ItemNode) item;
-	}
-
+	
 	@Override
 	public void setFocus() {
 
@@ -222,15 +239,15 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 	}
 
 	public void fillFields() {
-		getTextName().setText(selectedNode.getName());
-		getTextAddress().setText(selectedNode.getAddress());
-		getTextGroup().setText(selectedNode.getGroup());
-		getTextCity().setText(selectedNode.getCity());
-		getTextResult().setText("" + selectedNode.getResult());
-		setPartName(selectedNode.getName());
+		getTextName().setText(getSelectedNode().getName());
+		getTextAddress().setText(getSelectedNode().getAddress());
+		getTextGroup().setText(getSelectedNode().getGroup());
+		getTextCity().setText(getSelectedNode().getCity());
+		getTextResult().setText("" + getSelectedNode().getResult());
+		setPartName(getSelectedNode().getName());
 		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID,
 				UtilsWithConstants.NEW_ITEM);
-		imagePath = selectedNode.getImagePath();
+		imagePath = getSelectedNode().getImagePath();
 		if (!imagePath.equals("")) {
 			try {
 				descriptor = ImageDescriptor.createFromURL(Paths.get(imagePath).toUri().toURL());
@@ -243,26 +260,40 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		int fieldResult = Integer.parseInt(getTextResult().getText());
-		ItemNode node = new ItemNode(getTextName().getText(), getTextAddress().getText(), getTextCity().getText(),
-				fieldResult, imagePath);
-		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
-			Controller.getInstance().save(selectedNode, node);
-			if (Controller.getInstance().isNodeExists(node)) {
-				selectedNode = node;
-				NodeEditorInput input = (NodeEditorInput) getEditorInput();
-				input.setName(selectedNode.getPath() + ID);
-				setDirty(false);
-				setPartName(selectedNode.getName());
-			} else {
-				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
-						"Node already exist with this name");
-			}
-		} else {
-			MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
-					"Can't save node, because it was deleted");
-			this.getSite().getPage().closeEditor(this, false);
+
+		ItemNode node = createNewNode();
+		doSave(node);
+//		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
+//			Controller.getInstance().save(selectedNode, node);
+//			if (Controller.getInstance().isNodeExists(node)) {
+//				selectedNode = node;
+//				NodeEditorInput input = (NodeEditorInput) getEditorInput();
+//				input.setName(selectedNode.getPath() + ID);
+//				setDirty(false);
+//				setPartName(selectedNode.getName());
+//			} else {
+//				MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
+//						"Node already exist with this name");
+//			}
+//		}
+//		else {
+//			MessageDialog.openError(this.getSite().getPage().getWorkbenchWindow().getShell(), "Error",
+//					"Can't save node, because it was deleted");
+//			this.getSite().getPage().closeEditor(this, false);
+//		}
+	}
+
+	private ItemNode createNewNode() {
+		if (!Validator.validateNumber(getTextResult().getText())) {
+			MessageDialog.openError(getSite().getShell(), "Error", "The field must contain only digits");
+			getTextResult().setText("" + getSelectedNode().getResult());
 		}
+		if (!Validator.validateName(getTextName().getText())) {
+			getTextName().setText("Default");
+		}
+		ItemNode node = new ItemNode(getTextName().getText(), getTextAddress().getText(), getTextCity().getText(),
+				Integer.parseInt(getTextResult().getText()), imagePath);
+		return node;
 	}
 
 	@Override
@@ -271,19 +302,29 @@ public class ItemEditor extends AbstractEditorPart implements IReusableEditor {
 		firePropertyChange(IWorkbenchPartConstants.PROP_INPUT);
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		System.err.println("remove Listener item" + selectedNode);
-		Controller.getInstance().removeListener(itemListener);
-	}
+	
 
 	@Override
 	protected boolean checkModifyFields() {
-		return !textAddress.getText().equals(selectedNode.getAddress())
-				|| !textCity.getText().equals(selectedNode.getCity())
-				|| !textName.getText().equals(selectedNode.getName())
-				|| !textResult.getText().equals("" + selectedNode.getResult());
+		return !textAddress.getText().equals(getSelectedNode().getAddress())
+				|| !textCity.getText().equals(getSelectedNode().getCity())
+				|| !textName.getText().equals(getSelectedNode().getName())
+				|| !textResult.getText().equals("" + getSelectedNode().getResult());
+	}
+
+	@Override
+	protected String getID() {
+		// TODO Auto-generated method stub
+		return ID;
+	}
+
+	@Override
+	protected void setSelectedNode(INode node) {
+		// TODO Auto-generated method stub
+		
+	}
+	private ItemNode getSelectedNode() {
+		return (ItemNode) selectedNode;
 	}
 
 }
