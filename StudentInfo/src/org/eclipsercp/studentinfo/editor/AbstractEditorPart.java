@@ -10,6 +10,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
@@ -30,7 +31,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 	public void addSelectedNode(INode node) {
 		selectedNode = node;
 	}
-	
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 
@@ -95,31 +96,60 @@ public abstract class AbstractEditorPart extends EditorPart {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
-			//	setSelectedNode(node);
+				// setSelectedNode(node);
 				NodeEditorInput input = (NodeEditorInput) getEditorInput();
 				input.setName(selectedNode.getPath() + getID());
 				setDirty(false);
 				setPartName(selectedNode.getName());
 			}
 		}
-		}
-
-	protected abstract void setSelectedNode(INode node);
+	}
 
 	protected abstract String getID();
 
 	protected abstract boolean checkModifyFields();
 
 	public abstract void fillFields();
-	
+
 	protected void createEditorContext(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		compositeSetting(composite);
 		createItputItems(composite);
-		addNodeListener();
+		addNodeListener(getActiveEditor());
 	}
+
+	protected abstract EditorPart getActiveEditor();
+
 	protected abstract void compositeSetting(Composite composite);
+
 	protected abstract void createItputItems(Composite composite);
-	protected abstract void addNodeListener();
+
+	protected void addNodeListener(EditorPart editor) {
+		listener = new ChangeNodeListener() {
+			public void stateChanged(ChangeNodeEvent event) {
+				switch (event.getAction()) {
+				case UPDATE_NODE:
+					if (event.getNewNode() instanceof GroupNode) {
+						if (selectedNode.getParent().getPath().equals(event.getNewNode().getPath())) {
+							setFields(event.getNewNode());
+						}
+					}
+					break;
+				case REMOVE_NODE:
+					if (selectedNode.getPath().contains(event.getOldNode().getPath())) {
+						getSite().getPage().closeEditor(editor, false);
+					}
+					break;
+				case ADD_NODE:
+					break;
+				default:
+					break;
+				}
+			}
+		};
+		Controller.getInstance().addListener(listener);
+	}
+
+protected abstract void setFields(INode node);
 
 }
