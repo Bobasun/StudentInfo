@@ -72,7 +72,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						editor.addSelectedNode(node);
 						editor.fillFields();
 					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

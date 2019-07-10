@@ -18,4 +18,6 @@ public interface INodeService {
 
 	void removeNode(GroupNode parent, INode node);
 
+	
+	public void setRootNode(RootNode root) ;
 }

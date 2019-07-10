@@ -33,13 +33,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 	}
 
 	@Override
-	public void doSave(IProgressMonitor monitor) {
-
-	}
-
-	@Override
 	public void doSaveAs() {
-
 	}
 
 	@Override
@@ -56,28 +50,21 @@ public abstract class AbstractEditorPart extends EditorPart {
 	protected void setDirty(boolean dirty) {
 		if (this.dirty != dirty) {
 			this.dirty = dirty;
-
-			// Notify PROP_DIRTY changes to Workbench.
 			this.firePropertyChange(IEditorPart.PROP_DIRTY);
 		}
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 	class TextModifyListener implements ModifyListener {
@@ -96,7 +83,6 @@ public abstract class AbstractEditorPart extends EditorPart {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
 				selectedNode = node;
-				// setSelectedNode(node);
 				NodeEditorInput input = (NodeEditorInput) getEditorInput();
 				input.setName(selectedNode.getPath() + getID());
 				setDirty(false);
@@ -105,24 +91,12 @@ public abstract class AbstractEditorPart extends EditorPart {
 		}
 	}
 
-	protected abstract String getID();
-
-	protected abstract boolean checkModifyFields();
-
-	public abstract void fillFields();
-
 	protected void createEditorContext(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		compositeSetting(composite);
 		createItputItems(composite);
 		addNodeListener(getActiveEditor());
 	}
-
-	protected abstract EditorPart getActiveEditor();
-
-	protected abstract void compositeSetting(Composite composite);
-
-	protected abstract void createItputItems(Composite composite);
 
 	protected void addNodeListener(EditorPart editor) {
 		listener = new ChangeNodeListener() {
@@ -142,6 +116,9 @@ public abstract class AbstractEditorPart extends EditorPart {
 					break;
 				case ADD_NODE:
 					break;
+//				case SET_ROOT:
+//					getSite().getPage().closeEditor(editor, false);
+//					break;
 				default:
 					break;
 				}
@@ -150,6 +127,17 @@ public abstract class AbstractEditorPart extends EditorPart {
 		Controller.getInstance().addListener(listener);
 	}
 
-protected abstract void setFields(INode node);
+	protected abstract void setFields(INode node);
 
+	protected abstract String getID();
+
+	protected abstract EditorPart getActiveEditor();
+
+	protected abstract void compositeSetting(Composite composite);
+
+	protected abstract void createItputItems(Composite composite);
+
+	protected abstract boolean checkModifyFields();
+
+	public abstract void fillFields();
 }

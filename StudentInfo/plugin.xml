@@ -16,8 +16,8 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipsercp.studentinfo.Perspective"
-            name="StudentInfo.perspective"
-            id="StudentInfo.perspective">
+            id="StudentInfo.perspective"
+            name="StudentInfo.perspective">
       </perspective>
    </extension>
    <extension
@@ -42,6 +42,100 @@
             id="StudentInfo.groupEditor"
             name="Group Editor">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="StudentInfo.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="StudentInfo.commands.category"
+            id="StudentInfo.commands.optionItemCommand"
+            name="OptionItemCommand">
+         <state
+               class="studentinfo.states.StateOption1"
+               id="StudentInfo.commands.optionItem.state">
+         </state>
+         <commandParameter
+               id="StudentInfo.commands.optionItemCommand.parameter"
+               name="OptionItemParameter"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            categoryId="StudentInfo.commands.category"
+            id="StudentInfo.commands.commandNew"
+            name="AddCommand">
+      </command>
+      <command
+            categoryId="StudentInfo.commands.category"
+            id="StudentInfo.commands.removeCommand"
+            name="RemoveNodeCommand">
+      </command>
+      <command
+            categoryId="StudentInfo.commands.category"
+            id="StudentInfo.commands.optionGroupCommand"
+            name="OptionGroupCommand">
+         <state
+               class="studentinfo.states.StateOption2"
+               id="StudentInfo.commands.optionGroup.state">
+         </state>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            class="PopupMenu"
+            locationURI="popup:org.eclipsercp.studentinfo.treeviewer">
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="studentinfo.handlers.OptionItemHandler"
+            commandId="StudentInfo.commands.optionItemCommand">
+      </handler>
+      <handler
+            class="studentinfo.handlers.NewNodeHandler"
+            commandId="StudentInfo.commands.commandNew">
+      </handler>
+      <handler
+            class="studentinfo.handlers.RemoveNodeHandler"
+            commandId="StudentInfo.commands.removeCommand">
+      </handler>
+      <handler
+            class="studentinfo.handlers.OptionGroupHandler"
+            commandId="StudentInfo.commands.optionGroupCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="StudentInfo.commands.commandNew"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ctrl+1">
+      </key>
+      <key
+            commandId="StudentInfo.commands.removeCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ctrl+2">
+      </key>
+      <key
+            commandId="StudentInfo.commands.optionGroupCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ctrl+4">
+      </key>
+      <key
+            commandId="StudentInfo.commands.optionItemCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ctrl+3">
+      </key>
    </extension>
 
 </plugin>

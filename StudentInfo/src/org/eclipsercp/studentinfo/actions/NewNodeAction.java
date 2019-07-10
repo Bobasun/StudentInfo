@@ -19,7 +19,7 @@ import org.eclipsercp.studentinfo.model.INodeFactory;
 import org.eclipsercp.studentinfo.model.NodeService;
 import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
-public class NewItemAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class NewNodeAction extends Action implements ISelectionListener, IWorkbenchAction {
 
 	private final IWorkbenchWindow window;
 	private String id;
@@ -27,7 +27,7 @@ public class NewItemAction extends Action implements ISelectionListener, IWorkbe
 	public final static String ID_GROUP = "org.eclipsercp.studentinfo.newgroup";
 	private IStructuredSelection selection;
 
-	public NewItemAction(IWorkbenchWindow window, String id) {
+	public NewNodeAction(IWorkbenchWindow window, String id) {
 		this.window = window;
 
 		setId(id);

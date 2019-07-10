@@ -12,6 +12,7 @@ import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeService;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.NodeService;
+import org.eclipsercp.studentinfo.model.RootNode;
 
 public class Controller {
 
@@ -29,6 +30,11 @@ public class Controller {
 		return instance;
 	}
 
+	public void setRootNode(RootNode root) {
+		service.setRootNode(root);
+		notifyAllListeners(new ChangeNodeEvent(EnumAction.SET_ROOT));
+	}
+
 	public void remove(INode node) {
 		service.removeNode(node.getParent(), node);
 		notifyAllListeners(createNodeEvent(EnumAction.REMOVE_NODE, node, null));
@@ -39,18 +45,18 @@ public class Controller {
 	}
 
 	private void notifyAllListeners(ChangeNodeEvent event) {
-		new ArrayList<>(listListeners).forEach(l->l.stateChanged(event));
+		new ArrayList<>(listListeners).forEach(l -> l.stateChanged(event));
 	}
 
 	public void removeListener(ChangeNodeListener lis) {
 		Iterator<ChangeNodeListener> iterator = listListeners.iterator();
 		while (iterator.hasNext()) {
 			ChangeNodeListener temp = iterator.next();
-			if(temp.equals(lis)) {
+			if (temp.equals(lis)) {
 				iterator.remove();
 				break;
 			}
-			
+
 		}
 	}
 
@@ -60,9 +66,9 @@ public class Controller {
 		return node;
 
 	}
-	
+
 	public INode findNode(String path, Class<? extends INode> class_) {
-		return service.find(path,class_);
+		return service.find(path, class_);
 	}
 
 	public void save(INode selectedNode, INode newNode) {
@@ -80,7 +86,7 @@ public class Controller {
 		}
 
 	}
-	
+
 	private ChangeNodeEvent createNodeEvent(EnumAction action, INode oldNode, INode newNode) {
 		return new ChangeNodeEvent(action, oldNode, newNode);
 	}
@@ -91,7 +97,11 @@ public class Controller {
 	}
 
 	public boolean isNodeExists(INode node) {
-		return service.find(node.getPath(),node.getClass()) != null ? true : false;
+		return service.find(node.getPath(), node.getClass()) != null ? true : false;
+	}
+
+	public GroupNode getRootNode() {
+		return service.getRoot();
 	}
 }
 

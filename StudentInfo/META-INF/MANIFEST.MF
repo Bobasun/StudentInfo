@@ -8,6 +8,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.felix.scr,
  org.eclipse.equinox.util,
  org.eclipse.equinox.event,
- org.eclipse.jface
+ org.eclipse.jface,
+ json_plugin;bundle-version="1.0.0",
+ org.eclipse.core.expressions
 Automatic-Module-Name: StudentInfo
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .

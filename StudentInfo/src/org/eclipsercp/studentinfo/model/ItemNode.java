@@ -2,15 +2,22 @@ package org.eclipsercp.studentinfo.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ItemNode extends Node {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 788865914361010462L;
+	@JsonProperty
 	private String address;
+	@JsonProperty
 	private String city;
+	@JsonProperty
 	private int result;
+	@JsonProperty
 	private String imagePath;
 
 	public ItemNode(String name, String address, String city, int result, String imagePath) {
@@ -33,7 +40,8 @@ public class ItemNode extends Node {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	@JsonIgnore
 	public String getGroup() {
 		return parent.getName();
 	}
@@ -65,7 +73,7 @@ public class ItemNode extends Node {
 	public boolean hasChildren() {
 		return false;
 	}
-
+	
 	@Override
 	public String toString() {
 		return name + " " + address;
@@ -118,5 +126,7 @@ public class ItemNode extends Node {
 			return false;
 		return true;
 	}
+	
+
 
 }

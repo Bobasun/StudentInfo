@@ -11,5 +11,7 @@ public class RootNode extends GroupNode {
 		return null;
 	}
 	
-
+	public String getParentPath() {
+		return null;
+	}
 }

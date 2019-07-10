@@ -16,10 +16,14 @@ public class NodeService implements INodeService {
 		return nodeService;
 	}
 
-	private NodeService(GroupNode root) {
+	private NodeService(RootNode root) {
 		this.root = root;
 	}
 
+	public void setRootNode(RootNode root) {
+		this.root = root;
+	}
+	
 	@Override
 	public void removeNode(GroupNode parent, INode node) {
 		if (parent.getChildren().contains(node)) {
@@ -28,15 +32,14 @@ public class NodeService implements INodeService {
 	}
 
 	private boolean hasChildrenListSameNameNode(List<INode> list, INode node) {
-		Optional<INode> search = list.stream().filter(n -> n.getName().equals(node.getName()) 
-				&& n.hasChildren() == node.hasChildren() ).findAny();
+		Optional<INode> search = list.stream()
+				.filter(n -> n.getName().equals(node.getName()) && n.hasChildren() == node.hasChildren()).findAny();
 		return search.isPresent();
 	}
 
 	@Override
 	public void addNode(GroupNode parent, INode node) {
-		
-		if (!hasChildrenListSameNameNode(parent.getChildren(), node) ) {
+		if (!hasChildrenListSameNameNode(parent.getChildren(), node)) {
 			parent.getChildren().add(node);
 			node.setParent(parent);
 		}
@@ -44,17 +47,18 @@ public class NodeService implements INodeService {
 
 	@Override
 	public void updateNode(INode oldNode, INode newNode) {
-		if (!hasChildrenListSameNameNode(oldNode.getParent().getChildren(), newNode) || oldNode.getName().equals(newNode.getName())) {
-		newNode.setParent(oldNode.getParent());
-		if (oldNode.hasChildren()) {
-			((GroupNode) newNode).addChildren(((GroupNode) oldNode).getChildren());
-			for (int i = 0; i < ((GroupNode) newNode).getChildren().size(); i++) {
-				((GroupNode) newNode).getChildren().get(i).setParent((GroupNode) newNode);
+		if (!hasChildrenListSameNameNode(oldNode.getParent().getChildren(), newNode)
+				|| oldNode.getName().equals(newNode.getName())) {
+			newNode.setParent(oldNode.getParent());
+			if (oldNode.hasChildren()) {
+				((GroupNode) newNode).replaceChildren(((GroupNode) oldNode).getChildren());
+				for (int i = 0; i < ((GroupNode) newNode).getChildren().size(); i++) {
+					((GroupNode) newNode).getChildren().get(i).setParent((GroupNode) newNode);
+				}
 			}
+			int index = oldNode.getParent().getChildren().indexOf(oldNode);
+			oldNode.getParent().getChildren().set(index, newNode);
 		}
-		int index = oldNode.getParent().getChildren().indexOf(oldNode);
-		oldNode.getParent().getChildren().set(index, newNode);
-		} 
 	}
 
 	@Override
@@ -70,12 +74,11 @@ public class NodeService implements INodeService {
 
 	@Override
 	public INode find(String path) {
-			return find (path, INode.class);
+		return find(path, INode.class);
 	}
-	
+
 	@Override
 	public INode find(String path, Class<? extends INode> class_) {
-
 		String[] groups = path.substring(1, path.length()).split("/");
 		if (root.getName().equals(groups[0])) {
 			return find(groups, root.getChildren(), class_);
@@ -85,11 +88,11 @@ public class NodeService implements INodeService {
 	}
 
 	private INode find(String[] groups, List<INode> children, Class<? extends INode> class_) {
-       INode localNode = root;
-       for (int i = 1; i < groups.length; i++) {
+		INode localNode = root;
+		for (int i = 1; i < groups.length; i++) {
 			List<INode> localNodes = find(groups[i], children, class_);
-			for(INode node: localNodes) {
-				if(i==groups.length-1 && class_.isAssignableFrom(node.getClass())) {
+			for (INode node : localNodes) {
+				if (i == groups.length - 1 && class_.isAssignableFrom(node.getClass())) {
 					return node;
 				}
 				if (node.hasChildren()) {
@@ -101,15 +104,23 @@ public class NodeService implements INodeService {
 	}
 
 	private List<INode> find(String name, List<INode> nodes, Class<? extends INode> class_) {
-		
 		List<INode> list = new ArrayList<>();
 		for (INode node : nodes) {
 			if (node.getName().equals(name)) {
-				list.add(node);	
+				list.add(node);
 			}
 		}
 		return list;
-
+	}
+	
+	public String rootToString() {
+		String result = "";
+		GroupNode root = getRoot();
+		result = "{\"name\" : \"" + root.getName() +"\"," ;
+		
+		
+		return null;
+		
 	}
 
 }
