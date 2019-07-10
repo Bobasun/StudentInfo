@@ -56,44 +56,35 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-		treeViewer.setContentProvider(new UsersTreeViewerContentProvider());
-		treeViewer.setInput(getRootNode());
-		
-		treeViewer.setLabelProvider(new UsersTreeViewerLabelProvider());
+		createTreeviewer(parent);
 		getSite().setSelectionProvider(treeViewer);
-		treeViewer.expandAll();
 		controller.addListener(this);
-		treeViewer.addDoubleClickListener(createDoubleClickListener());
+		createDnD();
+		addContextMenu();
+	
+	}
+
+	private void createDnD() {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transferTypes = new Transfer[] { NodeTransfer.getInstance() };
-		treeViewer.addDragSupport(operations, transferTypes, new MyDragListener(treeViewer));
-//		Menu menu = new Menu(treeViewer.getControl());
-//		MenuItem item = new MenuItem(menu, SWT.NONE);
-//		item.setText("hi");
-//		new MyMenuManager(treeViewer);
+		treeViewer.addDragSupport(operations, transferTypes, new MyDragListener(treeViewer));		
+	}
+
+	private void createTreeviewer(Composite parent) {
+		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		treeViewer.setContentProvider(new UsersTreeViewerContentProvider());
+		treeViewer.setLabelProvider(new UsersTreeViewerLabelProvider());
+		treeViewer.setInput(getRootNode());	
+		treeViewer.expandAll();
+		treeViewer.addDoubleClickListener(createDoubleClickListener());
+	}
+
+	private void addContextMenu() {
 		MenuManager m = new MenuManager();
 		Menu menu = m.createContextMenu(treeViewer.getTree());
 		treeViewer.getTree().setMenu(menu);
 		getSite().registerContextMenu(m, treeViewer);
-		
-		
-		
-//		m.createContextMenu(treeViewer.getControl());
-//		m.add(new Action("sss") {
-//
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				System.err.println("Action");
-//			}
-//
-//		});
-//		m.setVisible(true);
-//			this.getSite().registerContextMenu(menuId, menuManager, selectionProvider);
-//		MyMenuBar myBar = new MyMenuBar(treeViewer);
-//		
-//		treeViewer.getControl().setMenu(myBar.getMainMenu());
+				
 	}
 
 	private IDoubleClickListener createDoubleClickListener() {
@@ -106,45 +97,42 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 				if (selectedNode instanceof RootNode) {
 					return;
 				}
-				String editorId = "";
-				if (selectedNode instanceof ItemNode) {
-					editorId = ItemEditor.ID;
-				} else if (selectedNode instanceof GroupNode) {
-					editorId = GroupEditor.ID;
-				}
-				String path = selectedNode.getPath() + editorId;
+				openNodeEditor(selectedNode);	
+			}
 
+			private void openNodeEditor(INode node) {
+				String editorId = getEditorId(node);
+				String path = node.getPath() + editorId;
 				NodeEditorInput input = new NodeEditorInput(path);
-				AbstractEditorPart editor;
 				try {
-					editor = (AbstractEditorPart) getSite().getWorkbenchWindow().getActivePage().openEditor(input,
+					AbstractEditorPart editor = (AbstractEditorPart) getSite().getWorkbenchWindow().getActivePage().openEditor(input,
 							editorId, false);
-					editor.addSelectedNode(selectedNode);
+					editor.addSelectedNode(node);
 					editor.fillFields();
 				} catch (PartInitException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+
+			private String getEditorId(INode selectedNode) {
+				if (selectedNode instanceof ItemNode) {
+					return ItemEditor.ID;
+				} else if (selectedNode instanceof GroupNode) {
+					return GroupEditor.ID;
+				}		
+				return "";
+			}
 		};
 	}
-
-//	private String getEditorId(IStructuredSelection selection) {
-//		if (selection.getFirstElement() instanceof ItemNode) {
-//			return ItemEditor.ID;
-//		}else if(selection.getFirstElement() instanceof RootNode) {
-//			return;
-//		} else if (selection.getFirstElement() instanceof GroupNode) {
-//			return GroupEditor.ID;
-//		}
-//		return null;
-//	}
 
 	public INode[] getRootNode() {
 		INodeService service = NodeService.getInstance();
 		return service.getAllNodes();
 	}
 
+	
+	
 	@Override
 	public void setFocus() {
 	}
@@ -153,7 +141,6 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 	public void stateChanged(ChangeNodeEvent e) {
 		if (e.getAction().equals(EnumAction.SET_ROOT)) {
 			treeViewer.setInput(getRootNode());
-
 			getSite().getPage().closeAllEditors(false);
 
 		}

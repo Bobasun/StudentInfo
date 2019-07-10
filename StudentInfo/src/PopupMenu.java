@@ -42,7 +42,6 @@ public class PopupMenu extends ExtensionContributionFactory {
 		additions.addContributionItem(new Separator(), null);
 		createItem(serviceLocator, additions, OPTIONS1, OptionItemHandler.OPTION1_COMMAND_ID);
 		createItem(serviceLocator, additions, OPTIONS2, OptionGroupHandler.OPTION2_COMMAND_ID);
-
 	}
 
 	private void createItem(IServiceLocator serviceLocator, IContributionRoot additions, String id, String commandId) {
@@ -60,7 +59,6 @@ public class PopupMenu extends ExtensionContributionFactory {
 			command = service.getCommand(OptionGroupHandler.OPTION2_COMMAND_ID);
 			state = command.getState(StateOption2.STATE_ID);
 		} 
-
 		if (state != null && (Boolean) state.getValue()) {
 			param.icon = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPTION);
 		}

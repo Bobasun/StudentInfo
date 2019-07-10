@@ -27,5 +27,4 @@ public class RemoveNodeHandler extends AbstractHandler {
 		}
 		return null;
 	}
-
 }
