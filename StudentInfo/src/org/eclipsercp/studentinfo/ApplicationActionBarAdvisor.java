@@ -10,6 +10,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.actions.EditNodeAction;
 import org.eclipsercp.studentinfo.actions.NewNodeAction;
 import org.eclipsercp.studentinfo.actions.OpenFileAction;
@@ -18,6 +19,7 @@ import org.eclipsercp.studentinfo.actions.SaveAllNodesAction;
 import org.eclipsercp.studentinfo.actions.SaveFileAction;
 import org.eclipsercp.studentinfo.actions.SaveNodeAction;
 import org.eclipsercp.studentinfo.actions.SavePerspective;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
@@ -53,6 +55,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		removeAction = new RemoveNodeAction(window);
 		register(removeAction);
 		exitAction = ActionFactory.QUIT.create(window);
+		exitAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.EXIT));
 		register(exitAction);
 		aboutAction = ActionFactory.ABOUT.create(window);
 		register(aboutAction);
@@ -61,19 +64,21 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		saveFile = new SaveFileAction(window);
 		register(saveFile);
 		openFile = new OpenFileAction(window);
+		
 	}
 	
 	@Override
 	protected void fillMenuBar(IMenuManager menuBar) {
 		MenuManager menuManager = new MenuManager("&File", "File");
-		menuManager.add(exitAction);
-		menuManager.add(savePerspective);
-		menuManager.add(saveFile);
 		menuManager.add(openFile);
+		menuManager.add(saveFile);
+		menuManager.add(savePerspective);
+		menuManager.add(exitAction);
 		MenuManager helpMenu = new MenuManager("&Help", "Help");
 		helpMenu.add(aboutAction);
 		menuBar.add(menuManager);
 		menuBar.add(helpMenu);
+		
 	}
 	
 	@Override

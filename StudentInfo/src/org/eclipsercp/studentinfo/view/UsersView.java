@@ -61,7 +61,6 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		controller.addListener(this);
 		createDnD();
 		addContextMenu();
-	
 	}
 
 	private void createDnD() {
@@ -110,7 +109,6 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 					editor.addSelectedNode(node);
 					editor.fillFields();
 				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

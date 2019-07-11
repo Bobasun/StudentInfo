@@ -10,10 +10,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.RootNode;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 import org.eclipsercp.studentinfo.view.UsersView;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,6 +32,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 		setId(ID);
 		setText("Open");
 		setToolTipText("Open");
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPEN));
 
 	}
 
@@ -36,6 +40,8 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 	public void run() {
 		FileDialog dialog = new FileDialog(window.getShell(), SWT.OPEN);
 		dialog.setFilterPath("c:\\");
+		String[] ext = new String[] { ".json" };
+		dialog.setFilterExtensions(ext);
 		String path = dialog.open();
 		if (path != null) {
 			readFile(path);

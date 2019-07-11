@@ -4,7 +4,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
 
-public class OptionItemHandler extends CommonHandler {
+public class OptionItemHandler extends AbstractCommonHandler {
 
 	public static final String OPTION1_COMMAND_ID = "StudentInfo.commands.optionItemCommand";
 

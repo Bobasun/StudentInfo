@@ -8,7 +8,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.model.INode;
+import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 import org.eclipsercp.studentinfo.view.UsersView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +28,7 @@ public class SaveFileAction extends Action implements IWorkbenchAction {
 		setId(ID);
 		setText("Save");
 		setToolTipText("Save");
-
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.SAVE));
 	}
 
 	@Override

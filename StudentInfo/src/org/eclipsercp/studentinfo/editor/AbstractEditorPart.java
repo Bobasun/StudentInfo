@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -15,12 +16,32 @@ import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
 import org.eclipsercp.studentinfo.controller.Controller;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.INode;
+import org.eclipsercp.studentinfo.undoredo.UndoRedoINodes;
 
 public abstract class AbstractEditorPart extends EditorPart {
 
 	protected boolean dirty;
 	protected ChangeNodeListener listener;
 	protected INode selectedNode;
+	private UndoRedoINodes stack;
+	private INode undoRedoNode;
+	
+	
+	public INode getUndoRedoNode() {
+		return undoRedoNode;
+	}
+
+	public void setUndoRedoNode(INode undoRedoNode) {
+		this.undoRedoNode = undoRedoNode;
+	}
+
+	public INode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public UndoRedoINodes getStack() {
+		return stack;
+	}
 
 	@Override
 	public void dispose() {
@@ -32,6 +53,15 @@ public abstract class AbstractEditorPart extends EditorPart {
 		selectedNode = node;
 	}
 
+	
+	
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		doSave(createNewNode());
+	}
+
+	protected abstract INode createNewNode();
+
 	@Override
 	public void doSaveAs() {
 	}
@@ -40,6 +70,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		setSite(site);
 		setInput(input);
+		stack = new UndoRedoINodes();
 	}
 
 	@Override
@@ -61,6 +92,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		
 	}
 
 	@Override
@@ -82,6 +114,8 @@ public abstract class AbstractEditorPart extends EditorPart {
 		if (Controller.getInstance().isNodeExists(selectedNode.getParent())) {
 			Controller.getInstance().save(selectedNode, node);
 			if (Controller.getInstance().isNodeExists(node)) {
+				stack.pushUndo(selectedNode);
+				undoRedoNode = node;
 				selectedNode = node;
 				NodeEditorInput input = (NodeEditorInput) getEditorInput();
 				input.setName(selectedNode.getPath() + getID());
@@ -96,6 +130,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 		compositeSetting(composite);
 		createItputItems(composite);
 		addNodeListener(getActiveEditor());
+		
 	}
 
 	protected void addNodeListener(EditorPart editor) {
@@ -116,16 +151,16 @@ public abstract class AbstractEditorPart extends EditorPart {
 					break;
 				case ADD_NODE:
 					break;
-//				case SET_ROOT:
-//					getSite().getPage().closeEditor(editor, false);
-//					break;
 				default:
 					break;
 				}
 			}
 		};
 		Controller.getInstance().addListener(listener);
+	
 	}
+	
+
 
 	protected abstract void setFields(INode node);
 
@@ -140,4 +175,10 @@ public abstract class AbstractEditorPart extends EditorPart {
 	protected abstract boolean checkModifyFields();
 
 	public abstract void fillFields();
+	
+	public abstract void fillFields(INode node);
+
+
+	
+	
 }

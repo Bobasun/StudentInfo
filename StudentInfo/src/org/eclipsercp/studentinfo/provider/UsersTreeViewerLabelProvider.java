@@ -9,6 +9,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.ItemNode;
+import org.eclipsercp.studentinfo.model.RootNode;
 import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class UsersTreeViewerLabelProvider extends LabelProvider {
@@ -27,9 +28,12 @@ public class UsersTreeViewerLabelProvider extends LabelProvider {
 		if (element instanceof ItemNode) {
 			return getResourceManager()
 					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ITEM));
-		} else if (element instanceof GroupNode) {
+		} else if (element instanceof GroupNode && !(element instanceof RootNode)) {
+			return UtilsWithConstants.resize(getResourceManager()
+					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.FOLDER)), 16,16);
+		} else if (element instanceof RootNode) {
 			return getResourceManager()
-					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPEN));
+					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ROOT));
 		}
 		return super.getImage(element);
 	}

@@ -22,20 +22,19 @@ public class SaveNodeAction extends Action implements IWorkbenchAction {
 		setId(ID);
 		setText("Save");
 		setToolTipText("Save");
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				Application.PLUGIN_ID, UtilsWithConstants.SAVE));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.SAVE));
 	}
 
 	@Override
 	public void run() {
-		AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage().getActiveEditor();
-		editor.doSave(new NullProgressMonitor());
-
+		if (window.getActivePage().getActiveEditor() != null) {
+			AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage().getActiveEditor();
+			editor.doSave(new NullProgressMonitor());
+		}
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 

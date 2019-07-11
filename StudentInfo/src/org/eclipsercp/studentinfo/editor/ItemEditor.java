@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -15,6 +14,7 @@ import org.eclipse.swt.events.TouchEvent;
 import org.eclipse.swt.events.TouchListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -69,36 +69,27 @@ public class ItemEditor extends AbstractEditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						SWT.SAVE);
-//		            dialog.setFilterNames(FILTER_NAMES);
-//		            dialog.setFilterExtensions(FILTER_EXTS);
-				imagePath = dialog.open();
-				if (imagePath != null) {
+						SWT.OPEN);
+				String localPath;
+				localPath = dialog.open();
+				if (localPath != null) {
 					try {
+						imagePath = localPath;
 						URL url = Paths.get(imagePath).toUri().toURL();
 						ImageDescriptor descriptor = ImageDescriptor.createFromURL(url);
 						Image image = descriptor.createImage();
-						imageButton.setImage(image);
+						Image resizedImage = UtilsWithConstants.resize(image, 250, 250);
+						imageButton.setImage(resizedImage);
 					} catch (MalformedURLException e1) {
 						e1.printStackTrace();
 					}
-				}
+				} 
 			}
 		});
 		imageButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!imagePath.equals(getSelectedNode().getImagePath())) {
-					setDirty(true);
-				}
-			}
-		});
-
-		imageButton.addTouchListener(new TouchListener() {
-
-			@Override
-			public void touch(TouchEvent e) {
 				if (!imagePath.equals(getSelectedNode().getImagePath())) {
 					setDirty(true);
 				}
@@ -143,7 +134,7 @@ public class ItemEditor extends AbstractEditorPart {
 		labelAddress.setText("Address");
 		textAddress = new Text(composite, SWT.BORDER);
 		textAddress.addModifyListener(new TextModifyListener());
-
+		
 	}
 
 	private void addInputCityRow(Composite composite) {
@@ -162,37 +153,13 @@ public class ItemEditor extends AbstractEditorPart {
 
 	@Override
 	public void setFocus() {
-
 	}
 
 	public void fillFields() {
-		getTextName().setText(getSelectedNode().getName());
-		getTextAddress().setText(getSelectedNode().getAddress());
-		getTextGroup().setText(getSelectedNode().getGroup());
-		getTextCity().setText(getSelectedNode().getCity());
-		getTextResult().setText("" + getSelectedNode().getResult());
-		setPartName(getSelectedNode().getName());
-		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID,
-				UtilsWithConstants.NEW_ITEM);
-		imagePath = getSelectedNode().getImagePath();
-		if (!imagePath.equals("")) {
-			try {
-				descriptor = ImageDescriptor.createFromURL(Paths.get(imagePath).toUri().toURL());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-		}
-		imageButton.setImage(descriptor.createImage());
+		fillFields(getSelectedNode());
 	}
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-
-		ItemNode node = createNewNode();
-		doSave(node);
-	}
-
-	private ItemNode createNewNode() {
+	protected ItemNode createNewNode() {
 		if (!Validator.validateNumber(getTextResult().getText())) {
 			MessageDialog.openError(getSite().getShell(), "Error", "The field must contain only digits");
 			getTextResult().setText("" + getSelectedNode().getResult());
@@ -218,7 +185,7 @@ public class ItemEditor extends AbstractEditorPart {
 		return ID;
 	}
 
-	private ItemNode getSelectedNode() {
+	public ItemNode getSelectedNode() {
 		return (ItemNode) selectedNode;
 	}
 
@@ -258,6 +225,28 @@ public class ItemEditor extends AbstractEditorPart {
 
 	public Button getImageButton() {
 		return imageButton;
+	}
+
+	@Override
+	public void fillFields(INode node) {
+		ItemNode itemNode = (ItemNode) node;
+		getTextName().setText(itemNode.getName());
+		getTextAddress().setText(itemNode.getAddress());
+		getTextGroup().setText(itemNode.getGroup());
+		getTextCity().setText(itemNode.getCity());
+		getTextResult().setText("" + itemNode.getResult());
+		setPartName(itemNode.getName());
+		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID,
+				UtilsWithConstants.DEFAULT_PICTURE);
+		imagePath = itemNode.getImagePath();
+		if (!imagePath.equals("")) {
+			try {
+				descriptor = ImageDescriptor.createFromURL(Paths.get(imagePath).toUri().toURL());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		imageButton.setImage(UtilsWithConstants.resize(descriptor.createImage(), 250, 250));
 	}
 
 }

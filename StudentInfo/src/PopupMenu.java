@@ -48,7 +48,7 @@ public class PopupMenu extends ExtensionContributionFactory {
 		CommandContributionItemParameter param = new CommandContributionItemParameter(serviceLocator, id, commandId,
 				SWT.PUSH);
 		param.label = id;
-
+		
 		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command;
 		State state = null;

@@ -18,7 +18,7 @@ import org.eclipsercp.studentinfo.model.INode;
 import org.eclipsercp.studentinfo.model.INodeFactory;
 import org.eclipsercp.studentinfo.model.ItemNode;
 
-public class NewNodeHandler extends CommonHandler {
+public class NewNodeHandler extends AbstractCommonHandler {
 
 	public static final String ADD_COMMAND_ID = "StudentInfo.commands.commandNew";
 
@@ -47,7 +47,7 @@ public class NewNodeHandler extends CommonHandler {
 		if (id != null) {
 			openNewEditor(new NodeEditorInput(id), parent);
 		}
-
+	
 		return null;
 	}
 

@@ -1,6 +1,5 @@
 package org.eclipsercp.studentinfo.editor;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,16 +50,15 @@ public class GroupEditor extends AbstractEditorPart {
 		composite.setLayout(layout);
 	}
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		GroupNode node = new GroupNode(textGroup.getText());
-		doSave(node);
+	protected GroupNode createNewNode() {
+		if (!Validator.validateName(getTextGroup().getText())) {
+			getTextGroup().setText("Default");
+		}
+		return new GroupNode(textGroup.getText());
 	}
 
 	public void fillFields() {
-		textGroup.setText(getSelectedNode().getName());
-		textParentGroup.setText(getSelectedNode().getParent().getName());
-		setPartName(getSelectedNode().getName());
+		fillFields(getSelectedNode());
 	}
 
 	@Override
@@ -73,7 +71,7 @@ public class GroupEditor extends AbstractEditorPart {
 		return ID;
 	}
 
-	private GroupNode getSelectedNode() {
+	public GroupNode getSelectedNode() {
 		return (GroupNode) selectedNode;
 	}
 
@@ -90,6 +88,13 @@ public class GroupEditor extends AbstractEditorPart {
 
 	public Text getTextGroup() {
 		return textGroup;
+	}
+
+	@Override
+	public void fillFields(INode node) {
+		textGroup.setText(node.getName());
+		textParentGroup.setText(node.getParent().getName());
+		setPartName(node.getName());
 	}
 
 }
