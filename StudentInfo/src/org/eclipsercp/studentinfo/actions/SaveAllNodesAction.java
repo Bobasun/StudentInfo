@@ -2,6 +2,7 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -28,6 +29,7 @@ public class SaveAllNodesAction extends Action implements IWorkbenchAction{
 		setToolTipText("Save All");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 				Application.PLUGIN_ID, UtilsWithConstants.SAVE_ALL));
+		setAccelerator(SWT.CTRL | SWT.SHIFT | 's');
 	}
 
 	@Override

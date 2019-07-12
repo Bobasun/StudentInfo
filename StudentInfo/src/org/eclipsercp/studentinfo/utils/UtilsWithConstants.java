@@ -9,8 +9,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipsercp.studentinfo.actions.NewNodeAction;
-import org.eclipsercp.studentinfo.editor.GroupEditor;
-import org.eclipsercp.studentinfo.editor.ItemEditor;
 
 public class UtilsWithConstants {
 
@@ -51,7 +49,7 @@ public class UtilsWithConstants {
 		  gc.setInterpolation(SWT.HIGH);
 		  gc.drawImage(image, 0, 0,image.getBounds().width, image.getBounds().height, 0, 0, width, height);
 		  gc.dispose();
-		  image.dispose();
+//		  image.dispose();
 		  return scaled;
 		}
 }

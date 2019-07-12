@@ -29,6 +29,7 @@ public class SaveFileAction extends Action implements IWorkbenchAction {
 		setText("Save");
 		setToolTipText("Save");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.SAVE));
+		setAccelerator(SWT.CTRL | 's');
 	}
 
 	@Override

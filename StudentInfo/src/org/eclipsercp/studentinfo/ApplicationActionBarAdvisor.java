@@ -30,7 +30,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction removeAction;
 	private IWorkbenchAction saveAllNodes;
 	private IWorkbenchAction exitAction;
-	private IWorkbenchAction aboutAction;
+//	private IWorkbenchAction aboutAction;
 	private IWorkbenchAction savePerspective;
 	private IWorkbenchAction saveFile;
 	private IWorkbenchAction openFile;
@@ -57,8 +57,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		exitAction = ActionFactory.QUIT.create(window);
 		exitAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.EXIT));
 		register(exitAction);
-		aboutAction = ActionFactory.ABOUT.create(window);
-		register(aboutAction);
+//		aboutAction = ActionFactory.ABOUT.create(window);
+//		register(aboutAction);
 		savePerspective = new SavePerspective(window);
 		register(savePerspective);
 		saveFile = new SaveFileAction(window);
@@ -74,10 +74,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menuManager.add(saveFile);
 		menuManager.add(savePerspective);
 		menuManager.add(exitAction);
-		MenuManager helpMenu = new MenuManager("&Help", "Help");
-		helpMenu.add(aboutAction);
+//		MenuManager helpMenu = new MenuManager("&Help", "Help");
+//		helpMenu.add(aboutAction);
 		menuBar.add(menuManager);
-		menuBar.add(helpMenu);
+//		menuBar.add(helpMenu);
 		
 	}
 	

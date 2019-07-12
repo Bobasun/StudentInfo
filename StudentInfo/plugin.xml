@@ -91,6 +91,10 @@
             id="StudentInfo.commands.Undo"
             name="Undo">
       </command>
+      <command
+            id="StudentInfo.commands.help"
+            name="Help">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -123,6 +127,49 @@
             </command>
          </toolbar>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="editmenu"
+               label="Edit">
+            <command
+                  commandId="StudentInfo.commands.Undo"
+                  icon="icons/undo.png"
+                  id="xs"
+                  label="Undo"
+                  style="push"
+                  tooltip="Undo">
+            </command>
+            <command
+                  commandId="StudentInfo.commands.Redo"
+                  icon="icons/redo.png"
+                  id="ys"
+                  label="Redo"
+                  style="push"
+                  tooltip="Redo">
+            </command>
+            <command
+                  commandId="StudentInfo.commands.removeCommand"
+                  icon="icons/cross.png"
+                  id="remove"
+                  label="Remove"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="helpmenu"
+               label="Help">
+            <command
+                  commandId="StudentInfo.commands.help"
+                  icon="icons/text_align_justify.png"
+                  id="q"
+                  label="About"
+                  style="push"
+                  tooltip="Help">
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -149,6 +196,10 @@
       <handler
             class="org.eclipsercp.studentinfo.undoredo.UndoHandler"
             commandId="StudentInfo.commands.Undo">
+      </handler>
+      <handler
+            class="studentinfo.handlers.HelpHandler"
+            commandId="StudentInfo.commands.help">
       </handler>
    </extension>
    <extension

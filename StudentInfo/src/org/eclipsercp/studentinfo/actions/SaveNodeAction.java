@@ -2,6 +2,7 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -23,6 +24,7 @@ public class SaveNodeAction extends Action implements IWorkbenchAction {
 		setText("Save");
 		setToolTipText("Save");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.SAVE));
+		setAccelerator(SWT.CTRL | SWT.ALT | 's');
 	}
 
 	@Override
