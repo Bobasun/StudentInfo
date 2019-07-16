@@ -47,7 +47,7 @@ public class NewNodeHandler extends AbstractCommonHandler {
 		if (id != null) {
 			openNewEditor(new NodeEditorInput(id), parent);
 		}
-	
+
 		return null;
 	}
 

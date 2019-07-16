@@ -23,7 +23,7 @@ public class NodeService implements INodeService {
 	public void setRootNode(RootNode root) {
 		this.root = root;
 	}
-	
+
 	@Override
 	public void removeNode(GroupNode parent, INode node) {
 		if (parent.getChildren().contains(node)) {
@@ -112,15 +112,14 @@ public class NodeService implements INodeService {
 		}
 		return list;
 	}
-	
+
 	public String rootToString() {
 		String result = "";
 		GroupNode root = getRoot();
-		result = "{\"name\" : \"" + root.getName() +"\"," ;
-		
-		
+		result = "{\"name\" : \"" + root.getName() + "\",";
+
 		return null;
-		
+
 	}
 
 }

@@ -10,11 +10,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TouchEvent;
-import org.eclipse.swt.events.TouchListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -83,7 +80,7 @@ public class ItemEditor extends AbstractEditorPart {
 					} catch (MalformedURLException e1) {
 						e1.printStackTrace();
 					}
-				} 
+				}
 			}
 		});
 		imageButton.addSelectionListener(new SelectionAdapter() {
@@ -134,7 +131,7 @@ public class ItemEditor extends AbstractEditorPart {
 		labelAddress.setText("Address");
 		textAddress = new Text(composite, SWT.BORDER);
 		textAddress.addModifyListener(new TextModifyListener());
-		
+
 	}
 
 	private void addInputCityRow(Composite composite) {

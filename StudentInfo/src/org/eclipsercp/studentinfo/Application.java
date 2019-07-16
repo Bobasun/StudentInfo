@@ -12,7 +12,7 @@ import org.eclipse.ui.PlatformUI;
 public class Application implements IApplication {
 
 	public static final String PLUGIN_ID = "StudentInfo";
-	
+
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		Display display = PlatformUI.createDisplay();
@@ -25,7 +25,7 @@ public class Application implements IApplication {
 		} finally {
 			display.dispose();
 		}
-		
+
 	}
 
 	@Override

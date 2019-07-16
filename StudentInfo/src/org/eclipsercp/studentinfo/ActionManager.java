@@ -2,7 +2,6 @@ package org.eclipsercp.studentinfo;
 
 import java.util.HashMap;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -13,7 +12,6 @@ import org.eclipsercp.studentinfo.actions.RemoveNodeAction;
 import org.eclipsercp.studentinfo.actions.SaveAllNodesAction;
 import org.eclipsercp.studentinfo.actions.SaveFileAction;
 import org.eclipsercp.studentinfo.actions.SaveNodeAction;
-import org.eclipsercp.studentinfo.actions.SavePerspective;
 
 public class ActionManager {
 	private static final String EDIT_NODE_ACTION = "editNodeAction";

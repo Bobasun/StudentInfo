@@ -14,12 +14,12 @@ public abstract class AbstractCommonHandler extends AbstractHandler {
 	private ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 
 	protected State getStateItemOption() {
-		Command command =service.getCommand(OptionItemHandler.OPTION1_COMMAND_ID);
+		Command command = service.getCommand(OptionItemHandler.OPTION1_COMMAND_ID);
 		return command.getState(StateOption1.STATE_ID);
 	}
-	
+
 	protected State getStateGroupOption() {
-		Command command =service.getCommand(OptionGroupHandler.OPTION2_COMMAND_ID);
+		Command command = service.getCommand(OptionGroupHandler.OPTION2_COMMAND_ID);
 		return command.getState(StateOption2.STATE_ID);
 	}
 }

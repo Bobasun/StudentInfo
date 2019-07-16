@@ -12,33 +12,27 @@ public class SavePerspective extends Action implements IWorkbenchAction {
 
 	private final IWorkbenchWindow window;
 	public final static String ID = "org.eclipsercp.studentinfo.saveperspective";
-	
-	public SavePerspective (IWorkbenchWindow window) {
+
+	public SavePerspective(IWorkbenchWindow window) {
 		this.window = window;
 		setId(ID);
 		setText("Save perspective");
 		setToolTipText("SavePerspective");
-//		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPEN));
 	}
-	
-	
-	
+
 	@Override
 	public void run() {
 		IWorkbenchPage page = window.getActivePage();
-		IPerspectiveRegistry perspectiveRegistry = window.getWorkbench()
-		        .getPerspectiveRegistry();
+		IPerspectiveRegistry perspectiveRegistry = window.getWorkbench().getPerspectiveRegistry();
 		IPerspectiveDescriptor personalPerspectiveDescriptor = perspectiveRegistry
-		        .findPerspectiveWithId(ApplicationWorkbenchAdvisor.PERSPECTIVE_ID);
+				.findPerspectiveWithId(ApplicationWorkbenchAdvisor.PERSPECTIVE_ID);
 		// hardcoded!!!
 
 		if (page != null && personalPerspectiveDescriptor != null) {
-		    // ... other stuff like different confirm dialogs
-		    page.savePerspectiveAs(personalPerspectiveDescriptor);
+			// ... other stuff like different confirm dialogs
+			page.savePerspectiveAs(personalPerspectiveDescriptor);
 		}
 	}
-
-
 
 	@Override
 	public void dispose() {

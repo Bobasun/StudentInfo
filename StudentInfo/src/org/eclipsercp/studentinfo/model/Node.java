@@ -13,7 +13,7 @@ public abstract class Node implements INode, Cloneable, Serializable {
 	private static final long serialVersionUID = -3675962890779052672L;
 	@JsonIgnore
 	protected GroupNode parent;
-	
+
 	@JsonProperty
 	protected String name;
 
@@ -33,7 +33,6 @@ public abstract class Node implements INode, Cloneable, Serializable {
 		return parent.getPath();
 	}
 
-
 	@Override
 	public void setParent(GroupNode parent) {
 		this.parent = parent;
@@ -51,7 +50,6 @@ public abstract class Node implements INode, Cloneable, Serializable {
 		return name;
 	}
 
-	
 	@Override
 	public GroupNode getParent() {
 		// TODO Auto-generated method stub

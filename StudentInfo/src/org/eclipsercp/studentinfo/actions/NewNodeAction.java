@@ -52,8 +52,7 @@ public class NewNodeAction extends Action implements ISelectionListener, IWorkbe
 
 	private void openNewEditor(NodeEditorInput input) {
 		try {
-			AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage()
-					.openEditor(input, id, false);
+			AbstractEditorPart editor = (AbstractEditorPart) window.getActivePage().openEditor(input, id, false);
 			INodeFactory nodeFactory = INodeFactory.createNodeFactoty(id);
 			editor.addSelectedNode(nodeFactory.createINode(getParent()));
 			editor.fillFields();

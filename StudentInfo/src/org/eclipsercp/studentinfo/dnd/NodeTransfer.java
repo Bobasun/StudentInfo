@@ -2,14 +2,11 @@ package org.eclipsercp.studentinfo.dnd;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.eclipse.swt.dnd.ByteArrayTransfer;
-
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.internal.ole.win32.COM;
 import org.eclipse.swt.internal.ole.win32.FORMATETC;
@@ -111,9 +108,8 @@ public class NodeTransfer extends ByteArrayTransfer {
 	@Override
 	protected boolean validate(Object object) {
 		System.err.println("valis");
-		return !(object instanceof RootNode); 
-		
+		return !(object instanceof RootNode);
+
 	}
-	
-	
+
 }

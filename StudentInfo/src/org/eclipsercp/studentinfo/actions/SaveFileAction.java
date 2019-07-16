@@ -16,8 +16,6 @@ import org.eclipsercp.studentinfo.view.UsersView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 public class SaveFileAction extends Action implements IWorkbenchAction {
 
 	public final static String ID = "org.eclipsercp.studentinfo.savefile";
@@ -37,7 +35,7 @@ public class SaveFileAction extends Action implements IWorkbenchAction {
 		UsersView view = (UsersView) window.getActivePage().findView(UsersView.ID);
 		System.err.println(view.getRootNode()[0].getName());
 		saveToJson(view.getRootNode()[0]);
-		
+
 	}
 
 	private void saveToJson(INode node) {

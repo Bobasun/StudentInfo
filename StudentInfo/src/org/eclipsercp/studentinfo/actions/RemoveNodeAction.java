@@ -26,7 +26,8 @@ public class RemoveNodeAction extends Action implements ISelectionListener, IWor
 		setText("Remove");
 		setToolTipText("Remove");
 		window.getSelectionService().addSelectionListener(this);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.DELETE));
+		setImageDescriptor(
+				AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.DELETE));
 	}
 
 	@Override

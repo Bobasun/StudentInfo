@@ -10,7 +10,7 @@ public class RootNode extends GroupNode {
 	public GroupNode getParent() {
 		return null;
 	}
-	
+
 	public String getParentPath() {
 		return null;
 	}

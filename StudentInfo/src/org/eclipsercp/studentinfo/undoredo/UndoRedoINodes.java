@@ -16,7 +16,7 @@ public class UndoRedoINodes {
 
 	public void pushUndo(INode node) {
 		undo.add(node);
-		
+
 	}
 
 	public void pushRedo(INode node) {

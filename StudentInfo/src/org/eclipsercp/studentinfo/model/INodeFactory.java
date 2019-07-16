@@ -6,7 +6,7 @@ import org.eclipsercp.studentinfo.editor.ItemEditor;
 public abstract class INodeFactory {
 
 	public static INodeFactory createNodeFactoty(String id) {
-		
+
 		switch (id) {
 		case ItemEditor.ID:
 			return new ItemNodeFactory();

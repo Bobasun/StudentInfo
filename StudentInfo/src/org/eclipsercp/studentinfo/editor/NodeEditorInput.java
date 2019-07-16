@@ -7,7 +7,7 @@ import org.eclipse.ui.IPersistableElement;
 public class NodeEditorInput implements IEditorInput {
 
 	private String name;
-	
+
 	public NodeEditorInput(String name) {
 		super();
 		this.name = name;
@@ -71,5 +71,5 @@ public class NodeEditorInput implements IEditorInput {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

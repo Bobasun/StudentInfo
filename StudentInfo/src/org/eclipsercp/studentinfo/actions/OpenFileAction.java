@@ -17,13 +17,12 @@ import org.eclipsercp.studentinfo.model.GroupNode;
 import org.eclipsercp.studentinfo.model.ItemNode;
 import org.eclipsercp.studentinfo.model.RootNode;
 import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
-import org.eclipsercp.studentinfo.view.UsersView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OpenFileAction extends Action implements IWorkbenchAction {
-	
+
 	public final static String ID = "org.eclipsercp.studentinfo.openfile";
 	private IWorkbenchWindow window;
 
@@ -45,20 +44,19 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 		String path = dialog.open();
 		if (path != null) {
 			readFile(path);
-		}	
+		}
 	}
-	
+
 	private void readFile(String path) {
 		final ObjectMapper mapper = new ObjectMapper();
-		try { 
+		try {
 			JsonNode node = mapper.readTree(new File(path));
 			String name = node.get("name").asText();
 			RootNode rootNode = new RootNode(name);
 			JsonNode childrenNode = node.get("nodes");
 			createChildren(childrenNode, rootNode);
 			Controller.getInstance().setRootNode(rootNode);
-			
-		
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -95,9 +93,9 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
 		JsonNode childrenNode = node.get("nodes");
 		createChildren(childrenNode, groupNode);
 		parent.addChildren(groupNode);
-		
+
 	}
-	
+
 	@Override
 	public void dispose() {
 	}

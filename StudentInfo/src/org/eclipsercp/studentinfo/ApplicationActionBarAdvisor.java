@@ -11,13 +11,10 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipsercp.studentinfo.actions.EditNodeAction;
 import org.eclipsercp.studentinfo.actions.NewNodeAction;
 import org.eclipsercp.studentinfo.actions.OpenFileAction;
 import org.eclipsercp.studentinfo.actions.RemoveNodeAction;
-import org.eclipsercp.studentinfo.actions.SaveAllNodesAction;
 import org.eclipsercp.studentinfo.actions.SaveFileAction;
-import org.eclipsercp.studentinfo.actions.SaveNodeAction;
 import org.eclipsercp.studentinfo.actions.SavePerspective;
 import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
@@ -34,19 +31,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction savePerspective;
 	private IWorkbenchAction saveFile;
 	private IWorkbenchAction openFile;
-	
+
 	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 	}
-	
+
 	@Override
 	protected void makeActions(IWorkbenchWindow window) {
 		super.makeActions(window);
 		editUser = ActionManager.getInstance(window).getEditNodeAction();
 		register(editUser);
-		newItem =  ActionManager.getInstance(window).getNewItemNodeAction();
+		newItem = ActionManager.getInstance(window).getNewItemNodeAction();
 		register(newItem);
-		saveNode =  ActionManager.getInstance(window).getSaveNodeAction();
+		saveNode = ActionManager.getInstance(window).getSaveNodeAction();
 		register(saveNode);
 		saveAllNodes = ActionManager.getInstance(window).getSaveAllNodesAction();
 		register(saveAllNodes);
@@ -55,7 +52,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		removeAction = new RemoveNodeAction(window);
 		register(removeAction);
 		exitAction = ActionFactory.QUIT.create(window);
-		exitAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.EXIT));
+		exitAction.setImageDescriptor(
+				AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.EXIT));
 		register(exitAction);
 //		aboutAction = ActionFactory.ABOUT.create(window);
 //		register(aboutAction);
@@ -64,9 +62,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		saveFile = new SaveFileAction(window);
 		register(saveFile);
 		openFile = new OpenFileAction(window);
-		
+
 	}
-	
+
 	@Override
 	protected void fillMenuBar(IMenuManager menuBar) {
 		MenuManager menuManager = new MenuManager("&File", "File");
@@ -78,23 +76,21 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //		helpMenu.add(aboutAction);
 		menuBar.add(menuManager);
 //		menuBar.add(helpMenu);
-		
+
 	}
-	
+
 	@Override
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 		super.fillCoolBar(coolBar);
-		IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());  
-		coolBar.add(toolbar); 
-		toolbar.add(editUser); 
+		IToolBarManager toolbar = new ToolBarManager(coolBar.getStyle());
+		coolBar.add(toolbar);
+		toolbar.add(editUser);
 		toolbar.add(saveNode);
 		toolbar.add(saveAllNodes);
 		toolbar.add(removeAction);
 		toolbar.add(newItem);
 		toolbar.add(newGroup);
-		
+
 	}
-	
 
 }
-

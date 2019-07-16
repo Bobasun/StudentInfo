@@ -14,14 +14,13 @@ import org.eclipsercp.studentinfo.model.RootNode;
 public class RemoveNodeHandler extends AbstractHandler {
 
 	public static final String REMOVE_COMMAND_ID = "StudentInfo.commands.removeCommand";
-	
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		ISelectionService selectionService = window.getSelectionService();
 		IStructuredSelection selection = (IStructuredSelection) selectionService.getSelection();
-		if (selection.getFirstElement() instanceof INode 
-				&& !(selection.getFirstElement() instanceof RootNode)) {
+		if (selection.getFirstElement() instanceof INode && !(selection.getFirstElement() instanceof RootNode)) {
 			INode node = (INode) selection.getFirstElement();
 			Controller.getInstance().remove(node);
 		}

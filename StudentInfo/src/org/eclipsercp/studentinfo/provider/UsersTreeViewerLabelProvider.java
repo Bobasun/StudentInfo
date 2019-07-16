@@ -26,14 +26,15 @@ public class UsersTreeViewerLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ItemNode) {
-			return getResourceManager()
-					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ITEM));
+			return getResourceManager().createImage(
+					AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ITEM));
 		} else if (element instanceof GroupNode && !(element instanceof RootNode)) {
-			return UtilsWithConstants.resize(getResourceManager()
-					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.FOLDER)), 16,16);
+			return UtilsWithConstants.resize(getResourceManager().createImage(
+					AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.FOLDER)), 16,
+					16);
 		} else if (element instanceof RootNode) {
-			return getResourceManager()
-					.createImage(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ROOT));
+			return getResourceManager().createImage(
+					AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.ROOT));
 		}
 		return super.getImage(element);
 	}

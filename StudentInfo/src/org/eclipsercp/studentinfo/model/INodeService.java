@@ -1,7 +1,5 @@
 package org.eclipsercp.studentinfo.model;
 
-import java.util.List;
-
 public interface INodeService {
 
 	void addNode(GroupNode parent, INode node);
@@ -18,6 +16,5 @@ public interface INodeService {
 
 	void removeNode(GroupNode parent, INode node);
 
-	
-	public void setRootNode(RootNode root) ;
+	public void setRootNode(RootNode root);
 }

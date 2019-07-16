@@ -1,4 +1,5 @@
 package org.eclipsercp.studentinfo.undoredo;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -6,7 +7,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
 import org.eclipsercp.studentinfo.model.INode;
-import org.eclipsercp.studentinfo.undoredo.UndoRedoINodes;
 
 public class RedoHandler extends AbstractHandler {
 

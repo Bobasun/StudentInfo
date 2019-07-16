@@ -1,10 +1,6 @@
-import java.net.URL;
-import java.nio.file.Paths;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -48,7 +44,7 @@ public class PopupMenu extends ExtensionContributionFactory {
 		CommandContributionItemParameter param = new CommandContributionItemParameter(serviceLocator, id, commandId,
 				SWT.PUSH);
 		param.label = id;
-		
+
 		ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command command;
 		State state = null;
@@ -58,7 +54,7 @@ public class PopupMenu extends ExtensionContributionFactory {
 		} else if (id.equals(OPTIONS2)) {
 			command = service.getCommand(OptionGroupHandler.OPTION2_COMMAND_ID);
 			state = command.getState(StateOption2.STATE_ID);
-		} 
+		}
 		if (state != null && (Boolean) state.getValue()) {
 			param.icon = AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPTION);
 		}

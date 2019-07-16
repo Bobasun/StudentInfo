@@ -3,14 +3,11 @@ package org.eclipsercp.studentinfo.actions;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
-import org.eclipsercp.studentinfo.editor.GroupEditor;
-import org.eclipsercp.studentinfo.editor.ItemEditor;
 import org.eclipsercp.studentinfo.utils.UtilsWithConstants;
 
 public class SaveNodeAction extends Action implements IWorkbenchAction {

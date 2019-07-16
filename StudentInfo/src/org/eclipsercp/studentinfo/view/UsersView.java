@@ -1,30 +1,17 @@
 package org.eclipsercp.studentinfo.view;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.application.ActionBarAdvisor;
-import org.eclipse.ui.internal.EditorReference;
-import org.eclipse.ui.part.EditorInputTransfer;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipsercp.studentinfo.actions.NewNodeAction;
 import org.eclipsercp.studentinfo.controller.ChangeNodeEvent;
 import org.eclipsercp.studentinfo.controller.ChangeNodeListener;
 import org.eclipsercp.studentinfo.controller.Controller;
@@ -66,14 +53,14 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 	private void createDnD() {
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transferTypes = new Transfer[] { NodeTransfer.getInstance() };
-		treeViewer.addDragSupport(operations, transferTypes, new MyDragListener(treeViewer));		
+		treeViewer.addDragSupport(operations, transferTypes, new MyDragListener(treeViewer));
 	}
 
 	private void createTreeviewer(Composite parent) {
 		treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		treeViewer.setContentProvider(new UsersTreeViewerContentProvider());
 		treeViewer.setLabelProvider(new UsersTreeViewerLabelProvider());
-		treeViewer.setInput(getRootNode());	
+		treeViewer.setInput(getRootNode());
 		treeViewer.expandAll();
 		treeViewer.addDoubleClickListener(createDoubleClickListener());
 	}
@@ -83,7 +70,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		Menu menu = m.createContextMenu(treeViewer.getTree());
 		treeViewer.getTree().setMenu(menu);
 		getSite().registerContextMenu(m, treeViewer);
-				
+
 	}
 
 	private IDoubleClickListener createDoubleClickListener() {
@@ -96,7 +83,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 				if (selectedNode instanceof RootNode) {
 					return;
 				}
-				openNodeEditor(selectedNode);	
+				openNodeEditor(selectedNode);
 			}
 
 			private void openNodeEditor(INode node) {
@@ -104,8 +91,8 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 				String path = node.getPath() + editorId;
 				NodeEditorInput input = new NodeEditorInput(path);
 				try {
-					AbstractEditorPart editor = (AbstractEditorPart) getSite().getWorkbenchWindow().getActivePage().openEditor(input,
-							editorId, false);
+					AbstractEditorPart editor = (AbstractEditorPart) getSite().getWorkbenchWindow().getActivePage()
+							.openEditor(input, editorId, false);
 					editor.addSelectedNode(node);
 					editor.fillFields();
 				} catch (PartInitException e) {
@@ -118,7 +105,7 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 					return ItemEditor.ID;
 				} else if (selectedNode instanceof GroupNode) {
 					return GroupEditor.ID;
-				}		
+				}
 				return "";
 			}
 		};
@@ -129,8 +116,6 @@ public class UsersView extends ViewPart implements ChangeNodeListener {
 		return service.getAllNodes();
 	}
 
-	
-	
 	@Override
 	public void setFocus() {
 	}

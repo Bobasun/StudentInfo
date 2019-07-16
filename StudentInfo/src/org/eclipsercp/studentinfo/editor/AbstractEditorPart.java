@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -25,8 +24,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 	protected INode selectedNode;
 	private UndoRedoINodes stack;
 	private INode undoRedoNode;
-	
-	
+
 	public INode getUndoRedoNode() {
 		return undoRedoNode;
 	}
@@ -53,8 +51,6 @@ public abstract class AbstractEditorPart extends EditorPart {
 		selectedNode = node;
 	}
 
-	
-	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		doSave(createNewNode());
@@ -92,7 +88,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		
+
 	}
 
 	@Override
@@ -130,7 +126,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 		compositeSetting(composite);
 		createItputItems(composite);
 		addNodeListener(getActiveEditor());
-		
+
 	}
 
 	protected void addNodeListener(EditorPart editor) {
@@ -157,10 +153,8 @@ public abstract class AbstractEditorPart extends EditorPart {
 			}
 		};
 		Controller.getInstance().addListener(listener);
-	
-	}
-	
 
+	}
 
 	protected abstract void setFields(INode node);
 
@@ -175,10 +169,7 @@ public abstract class AbstractEditorPart extends EditorPart {
 	protected abstract boolean checkModifyFields();
 
 	public abstract void fillFields();
-	
+
 	public abstract void fillFields(INode node);
 
-
-	
-	
 }

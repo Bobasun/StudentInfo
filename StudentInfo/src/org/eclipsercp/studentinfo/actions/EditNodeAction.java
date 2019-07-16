@@ -2,19 +2,12 @@ package org.eclipsercp.studentinfo.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipsercp.studentinfo.Application;
 import org.eclipsercp.studentinfo.editor.AbstractEditorPart;
@@ -78,8 +71,8 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 	public void selectionChanged(IWorkbenchPart part, ISelection incoming) {
 		if (incoming instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) incoming;
-			setEnabled(selection.getFirstElement() instanceof INode 
-					&& !(selection.getFirstElement() instanceof RootNode));
+			setEnabled(
+					selection.getFirstElement() instanceof INode && !(selection.getFirstElement() instanceof RootNode));
 		} else {
 			setEnabled(false);
 		}
