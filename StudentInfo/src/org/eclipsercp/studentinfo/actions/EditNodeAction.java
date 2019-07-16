@@ -36,6 +36,7 @@ public class EditNodeAction extends Action implements ISelectionListener, Action
 	public EditNodeAction(IWorkbenchWindow window) {
 		this.window = window;
 		setId(ID);
+		setActionDefinitionId(ID); // for command
 		setText("Open");
 		setToolTipText("Open");
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, UtilsWithConstants.OPEN));

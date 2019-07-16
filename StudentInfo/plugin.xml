@@ -95,6 +95,10 @@
             id="StudentInfo.commands.help"
             name="Help">
       </command>
+      <command
+            id="org.eclipsercp.studentinfo.userselectaction"
+            name="edit">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -169,6 +173,12 @@
                   tooltip="Help">
             </command>
          </menu>
+         <command
+               commandId="org.eclipsercp.studentinfo.userselectaction"
+               id="s"
+               label="sss"
+               style="push">
+         </command>
       </menuContribution>
    </extension>
    <extension
